@@ -635,15 +635,23 @@ function leave(v){
  const one=()=>{$('#tw').hidden=$('#lt').value=='1';$('#lfl').textContent=$('#lt').value=='1'?'Day':'From'};$('#lt').onchange=one;one();
  const cal=()=>{const d0=new Date(cm+'T12:00'),a=mon(cm),last=new Date(d0.getFullYear(),d0.getMonth()+1,0).getDate(),e=addD(cm,last-1),b=addD(mon(e),6),t=dk(Date.now());
   $('#lm').textContent=d0.toLocaleDateString('en-GB',{month:'long',year:'numeric'});let h=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="h">${x}</div>`).join('');
-  for(let d=a;d<=b;d=addD(d,1)){const out=d.slice(0,7)!=cm.slice(0,7),L=LV.filter(x=>x.status!='rejected'&&x.from<=d&&x.to>=d),H=hol(d);
+  for(let d=a;d<=b;d=addD(d,1)){const out=d.slice(0,7)!=cm.slice(0,7),L=LV.filter(x=>!['rejected','cancelled'].includes(x.status)&&x.from<=d&&x.to>=d),H=hol(d);
    h+=`<div class="${d==t?'td ':''}${H?'ho':''}" style="${out?'opacity:.35':''}">${+d.slice(8)}${H?`<span class="lt" title="${esc(H.n)}">${esc(H.n)}</span>`:''}${L.map(x=>`<span class="lt${x.status=='pending'?' pn':''}" title="${esc(x.name)}: ${esc(x.reason)}">${esc(x.name.split(' ')[0])}</span>`).join('')}</div>`}
   $('#lc').innerHTML=`<div class="lcal">${h}</div>`};
  $('#lp').onclick=()=>{cm=addD(cm,-1).slice(0,8)+'01';cal()};$('#ln').onclick=()=>{cm=addD(cm,32).slice(0,8)+'01';cal()};
  $('#go').onclick=async()=>{const f=$('#f').value,t=$('#lt').value=='1'?f:$('#t').value,rs=$('#rs').value.trim();if(!f||!t||t<f||!rs){$('#er').textContent='Choose valid dates and write a reason.';return}
   await DB.add('leaves',{uid:U.id,name:U.name,from:f,to:t,reason:rs,oneDay:f==t,status:'pending'});$('#er').textContent='';$('#rs').value=''};
  live('leaves',r=>{LV=r;cal();$('#l').innerHTML=r.map(x=>`<hr><b>${esc(x.name)}</b> <span class="tag">${x.status}</span>${x.from==x.to?' <span class="tag">one day</span>':''}<br>${x.from==x.to?x.from:x.from+' to '+x.to}<br><small>${esc(x.reason)}</small>
-  ${staff()&&x.status=='pending'?`<div class="r" style="margin-top:6px"><button data-a="approved" data-id="${x.id}">Approve</button><button class="d" data-a="rejected" data-id="${x.id}">Reject</button></div>`:''}`).join('')||'<p class="m">No requests.</p>';
-  $('#l').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>DB.upd('leaves',b.dataset.id,{status:b.dataset.a,by:U.name}))},mine());
+  ${staff()&&x.status=='pending'?`<div class="r" style="margin-top:6px"><button data-a="approved" data-id="${x.id}">Approve</button><button class="d" data-a="rejected" data-id="${x.id}">Reject</button></div>`:''}
+  ${['pending','approved'].includes(x.status)&&x.to>=dk(Date.now())&&(staff()||x.uid==U.id)?`<div style="margin-top:6px"><button class="o sm" data-cx="${x.id}">Cancel this leave</button></div>`:''}`).join('')||'<p class="m">No requests.</p>';
+  $('#l').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>DB.upd('leaves',b.dataset.id,{status:b.dataset.a,by:U.name}));
+  $('#l').querySelectorAll('[data-cx]').forEach(b=>b.onclick=async()=>{
+   if(b.dataset.s!='1'){b.dataset.s='1';b.textContent='Press again to confirm cancel';b.className='d sm';setTimeout(()=>{if(b.isConnected){b.dataset.s='';b.textContent='Cancel this leave';b.className='o sm'}},5000);return}
+   const x=LV.find(y=>y.id==b.dataset.cx);b.disabled=true;
+   await DB.upd('leaves',x.id,{status:'cancelled',cancelledBy:U.name,cancelledAt:Date.now()});
+   audit('leaves',x.id,'cancelled',x.name+' '+x.from+' to '+x.to);
+   if(x.uid==U.id)notify(await staffIds(),'Leave cancelled',x.name+': '+x.from+(x.to!=x.from?' to '+x.to:''),'leave');
+   else notify([x.uid],'Your leave was cancelled',x.from+(x.to!=x.from?' to '+x.to:'')+' by '+U.name,'leave')})},mine());
 }
 
 
