@@ -787,21 +787,24 @@ function items(v){
  let ed=null,rows=[];const td=dk(Date.now());
  v.innerHTML=`<div class="card"><h2 id="ht">Item taken from the office</h2><label>Product</label><input id="pn" list="dl" autocomplete="off"><datalist id="dl">${S.catalog.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
  <div class="r"><div><label>Quantity</label><input id="q" type="number" min="1" value="1"></div><div><label>Date</label><input id="d" type="date" value="${td}"></div></div>
+ <label>Place where it is used</label><input id="pu" list="pud" autocomplete="off" placeholder="Customer or place (choose or type)"><datalist id="pud"></datalist>
  <p class="e" id="er"></p><div class="r"><button id="go">Save</button><button class="o" id="cn" hidden>Cancel</button></div></div>
  <div class="card"><b>${staff()?'All entries':'My entries'}</b><div id="l"></div></div>`;
- const reset=()=>{ed=null;$('#pn').value='';$('#q').value=1;$('#d').value=td;$('#go').textContent='Save';$('#cn').hidden=true;$('#ht').textContent='Item taken from the office'};
+ DB.list('places').then(r=>{const d=$('#pud');if(d)d.innerHTML=r.filter(x=>x.active!==false).sort((a,b)=>a.name.localeCompare(b.name)).map(x=>`<option value="${esc(x.name)}">`).join('')}).catch(()=>{});
+ const reset=()=>{ed=null;$('#pu').value='';$('#pn').value='';$('#q').value=1;$('#d').value=td;$('#go').textContent='Save';$('#cn').hidden=true;$('#ht').textContent='Item taken from the office'};
  const draw=()=>{let d='';const L=[...rows].sort((a,b)=>(b.date||dk(b.ts)).localeCompare(a.date||dk(a.ts)));
   $('#l').innerHTML=L.map(x=>{const k=x.date||dk(x.ts),h=k!=d?`<hr><b>${k}</b>`:'';d=k;
-   return`${h}<div>${staff()?`<b>${esc(x.name)}</b>: `:''}${esc(x.item)} x${x.qty}${x.edited?' <span class="tag">edited</span>':''}
+   return`${h}<div>${staff()?`<b>${esc(x.name)}</b>: `:''}${esc(x.item)} x${x.qty}${x.place?' at <b>'+esc(x.place)+'</b>':''}${x.edited?' <span class="tag">edited</span>':''}
    ${staff()||x.uid==U.id?`<button class="o sm" data-e="${x.id}">Edit</button> <button class="d sm" data-x="${x.id}">Delete</button>`:''}</div>`}).join('')||'<p class="m">No entries.</p>';
-  $('#l').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const x=rows.find(y=>y.id==b.dataset.e);ed=x.id;$('#pn').value=x.item;$('#q').value=x.qty;
+  $('#l').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const x=rows.find(y=>y.id==b.dataset.e);ed=x.id;$('#pu').value=x.place||'';$('#pn').value=x.item;$('#q').value=x.qty;
    $('#d').value=x.date||dk(x.ts);$('#go').textContent='Save changes';$('#cn').hidden=false;$('#ht').textContent='Edit entry';scrollTo(0,0)});
   $('#l').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>confirm('Remove this entry? It stays in Records.')&&DB.del('items',b.dataset.x))};
  $('#cn').onclick=reset;
  $('#go').onclick=async()=>{const n=$('#pn').value.trim(),q=+$('#q').value,d=$('#d').value;
-  if(!n||!(q>0)||!d){$('#er').textContent='Fill in product, quantity and date.';return}
+  const pu=$('#pu').value.trim();
+  if(!n||!(q>0)||!d||!pu){$('#er').textContent='Fill in product, quantity, date and the place where it is used.';return}
   if(d>td){$('#er').textContent='The date cannot be in the future.';return}
-  if(ed){const o=rows.find(y=>y.id==ed);audit('items',ed,'edited',(o?o.item+' x'+o.qty+' '+(o.date||''):'')+' -> '+n+' x'+q+' '+d);await DB.upd('items',ed,{item:n,qty:q,date:d,edited:true})}else await DB.add('items',{uid:U.id,name:U.name,item:n,qty:q,date:d});
+  if(ed){const o=rows.find(y=>y.id==ed);audit('items',ed,'edited',(o?o.item+' x'+o.qty+' '+(o.date||''):'')+' -> '+n+' x'+q+' '+d+' at '+pu);await DB.upd('items',ed,{item:n,qty:q,date:d,place:pu,edited:true})}else await DB.add('items',{uid:U.id,name:U.name,item:n,qty:q,date:d,place:pu});
   reset();$('#er').textContent='Saved.'};
  live('items',r=>{rows=r;draw()},mine());
 }
