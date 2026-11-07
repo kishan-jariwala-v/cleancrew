@@ -765,6 +765,40 @@ async function translate(text,to){
    if((await Translator.availability({sourceLanguage:src,targetLanguage:to}))!='unavailable')return await(await Translator.create({sourceLanguage:src,targetLanguage:to})).translate(text)}}catch(e){}
  const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=Autodetect|'+to),j=await r.json(),t=j.responseData&&j.responseData.translatedText;
  if(!t||/MYMEMORY WARNING|INVALID/i.test(t))throw Error('The translation service is busy or unavailable.');return t}
+// ---- Attachments for messages (optional). Photos are shrunk; other files must be small. Stored in the "files" collection.
+const MAXF=3,MAXB=650*1024;
+const fsz=n=>n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB';
+const readURL=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>no(Error('Could not read '+f.name));r.readAsDataURL(f)});
+async function prepFile(f){
+ if(f.type.startsWith('image/')){
+  const u=URL.createObjectURL(f);try{const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(Error('Could not open the photo '+f.name));i.src=u});
+   let sc=Math.min(1,1280/Math.max(im.naturalWidth,im.naturalHeight)),q=.8,d='';
+   for(let k=0;k<8;k++){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.naturalWidth*sc));c.height=Math.max(1,Math.round(im.naturalHeight*sc));
+    const g=c.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);d=c.toDataURL('image/jpeg',q);
+    if(d.length*.75<=MAXB)break;q=Math.max(.5,q-.1);sc*=.8}
+   if(d.length*.75>MAXB)throw Error('The photo '+f.name+' is too large even after shrinking.');
+   return{name:f.name.replace(/\.[^.]+$/,'')+'.jpg',type:'image/jpeg',size:Math.round(d.length*.75),data:d}}finally{URL.revokeObjectURL(u)}}
+ if(f.size>MAXB)throw Error(f.name+' is too big. Files can be up to '+fsz(MAXB)+'. Photos are shrunk automatically.');
+ return{name:f.name,type:f.type||'application/octet-stream',size:f.size,data:await readURL(f)}}
+function attachBox(host){let L=[];
+ host.innerHTML=`<input type="file" multiple hidden accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.csv"><button type="button" class="o sm" data-at>Attach files or photos (optional)</button><div data-al></div><p class="e" data-ae></p>`;
+ const inp=host.querySelector('input'),al=host.querySelector('[data-al]'),ae=host.querySelector('[data-ae]');
+ const draw=()=>{al.innerHTML=L.map((x,i)=>`<div class="r" style="flex-wrap:nowrap;align-items:center;margin:4px 0"><span style="flex:1;word-break:break-all">${esc(x.name)} <small class="m">${fsz(x.size)}</small></span><button type="button" class="o sm" data-rm="${i}" style="flex:none;width:auto">Remove</button></div>`).join('');
+  al.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{L.splice(+b.dataset.rm,1);draw()})};
+ host.querySelector('[data-at]').onclick=()=>inp.click();
+ inp.onchange=async()=>{ae.textContent='';const F=[...inp.files];inp.value='';
+  for(const f of F){if(L.length>=MAXF){ae.textContent='You can attach up to '+MAXF+' files.';break}
+   try{ae.textContent='Preparing '+f.name+'...';L.push(await prepFile(f));ae.textContent=''}catch(e){ae.textContent=e.message}}draw()};
+ return{get:()=>L,reset:()=>{L=[];ae.textContent='';draw()}}}
+async function saveFiles(L,members){const A=[];for(const x of L){const id=await DB.add('files',{uid:U.id,members,name:x.name,type:x.type,size:x.size,data:x.data});A.push({id,name:x.name,type:x.type,size:x.size})}return A}
+const fcache={};
+const getFile=async id=>fcache[id]||(fcache[id]=await DB.get('files',id));
+const blobURL=d=>{const [h,b]=d.split(','),m=/data:([^;]+)/.exec(h)[1],a=atob(b),u=new Uint8Array(a.length);for(let i=0;i<a.length;i++)u[i]=a.charCodeAt(i);return URL.createObjectURL(new Blob([u],{type:m}))};
+const attHTML=x=>(x.att||[]).map(a=>a.type.startsWith('image/')?`<div style="margin-top:6px"><img data-fa="${a.id}" alt="${esc(a.name)}" style="max-width:100%;max-height:320px;border-radius:8px;cursor:zoom-in;background:#e3e8ec;min-height:40px"></div>`:`<div style="margin-top:6px"><button class="o sm" data-fd="${a.id}" data-n="${esc(a.name)}">${esc(a.name)} (${fsz(a.size)})</button></div>`).join('');
+function bindAtt(root){
+ root.querySelectorAll('[data-fa]').forEach(im=>{if(im.src)return;getFile(im.dataset.fa).then(f=>{if(f&&f.data){im.src=f.data;im.onclick=()=>window.open(blobURL(f.data),'_blank')}},()=>{im.alt='Photo not available'})});
+ root.querySelectorAll('[data-fd]').forEach(b=>b.onclick=async()=>{try{const f=await getFile(b.dataset.fd);const a=document.createElement('a');a.href=blobURL(f.data);a.download=b.dataset.n;document.body.appendChild(a);a.click();a.remove()}catch(e){b.textContent='Could not open file'}})}
+
 function msgs(v){
  let us=[],ms=[],en=[],tb='in',mode='list',cur=null,lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
  if(!LANGS[lang])lang='en';const tr={};
@@ -783,32 +817,32 @@ function msgs(v){
    <div class="r" style="margin-top:6px"><a href="${l}" target="_blank" rel="noopener"><button class="o" style="width:100%">Reply</button></a>${x.done?'':`<button data-id="${x.id}">Mark done</button>`}</div></div>`}).join('')||'<p class="m">No customer messages.</p>';
    $('#ml').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>DB.upd('enquiries',b.dataset.id,{done:true}));return}
   const R=srt(tb=='in'?ms.filter(x=>x.uid!=U.id&&(x.to=='all'||x.to==U.id)):ms.filter(x=>x.uid==U.id)).slice(0,60),r=rd();
-  $('#ml').innerHTML=R.map(x=>`<div class="mrow${tb=='in'&&!r.has(x.id)?' un':''}" data-o="${x.id}"><span class="t">${esc(sj(x))}</span><br><small>${tb=='in'?esc(x.name):'To: '+esc(nm(x.to))} &middot; ${fdt(x.ts)}${x.to=='all'?' &middot; whole team':''}</small></div>`).join('')||'<p class="m">No messages.</p>';
+  $('#ml').innerHTML=R.map(x=>`<div class="mrow${tb=='in'&&!r.has(x.id)?' un':''}" data-o="${x.id}"><span class="t">${esc(sj(x))}</span>${(x.att||[]).length?' <span class="tag">'+x.att.length+' attached</span>':''}<br><small>${tb=='in'?esc(x.name):'To: '+esc(nm(x.to))} &middot; ${fdt(x.ts)}${x.to=='all'?' &middot; whole team':''}</small></div>`).join('')||'<p class="m">No messages.</p>';
   $('#ml').querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>detail(ms.find(x=>x.id==b.dataset.o)))};
  const compose=()=>{mode='new';v.innerHTML=`<div class="card"><div class="r" style="align-items:center;flex-wrap:nowrap"><button class="o" id="bk" style="width:auto">Back</button><h2 style="flex:1;margin:0">New message</h2></div>
   <label>To</label><select id="mt"><option value="all">Whole team</option>${us.filter(x=>x.id!=U.id&&x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select>
-  <label>Subject</label><input id="mj" maxlength="120" placeholder="Subject"><label>Message</label><textarea id="mx" rows="7" placeholder="Write your message"></textarea><p class="e" id="er"></p><button id="sd">Send</button></div>`;
-  $('#bk').onclick=list;$('#mx').focus();
-  $('#sd').onclick=async()=>{const t=$('#mx').value.trim(),to=$('#mt').value,s=$('#mj').value.trim();if(!t){$('#er').textContent='Write a message first.';return}
-   $('#sd').disabled=true;const o={uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t};if(s)o.subject=s;
-   try{await DB.add('msgs',o);notify(to=='all'?us.map(x=>x.id):[to],(s?s+' - ':'')+'Message from '+U.name,t.slice(0,80),'msg');tb='out';list()}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}}};
+  <label>Subject</label><input id="mj" maxlength="120" placeholder="Subject"><label>Message</label><textarea id="mx" rows="7" placeholder="Write your message"></textarea><div id="ab" style="margin-top:8px"></div><p class="e" id="er"></p><button id="sd">Send</button></div>`;
+  $('#bk').onclick=list;$('#mx').focus();const ab=attachBox($('#ab'));
+  $('#sd').onclick=async()=>{const t=$('#mx').value.trim(),to=$('#mt').value,s=$('#mj').value.trim(),F=ab.get();if(!t&&!F.length){$('#er').textContent='Write a message or attach a file first.';return}
+   $('#sd').disabled=true;const mem=to=='all'?['all']:[U.id,to],o={uid:U.id,name:U.name,to,members:mem,text:t};if(s)o.subject=s;
+   try{if(F.length){$('#er').textContent='Uploading...';o.att=await saveFiles(F,mem);$('#er').textContent=''}await DB.add('msgs',o);notify(to=='all'?us.map(x=>x.id):[to],(s?s+' - ':'')+'Message from '+U.name,(t||'Sent '+F.length+' attachment(s)').slice(0,80),'msg');tb='out';list()}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}}};
  const drawThr=()=>{if(mode!='detail'||!$('#thr')||!cur)return;const rid=root(cur),T=ms.filter(x=>root(x)==rid).sort((a,b)=>(a.ts||0)-(b.ts||0));
   $('#thr').innerHTML=T.map(x=>{const t=tr[key(x)],me=x.uid==U.id;
-   return`<div class="msg ${me?'me':''}${x.id==cur.id?' cur':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}${x.to!='all'&&me?' &middot; to '+esc(nm(x.to)):''}</small><br>${x.subject?`<b>${esc(x.subject)}</b><br>`:''}${esc(x.text)}
-   ${t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`}</div>`}).join('');
-  $('#thr').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(T.find(x=>x.id==b.dataset.tr)));
+   return`<div class="msg ${me?'me':''}${x.id==cur.id?' cur':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}${x.to!='all'&&me?' &middot; to '+esc(nm(x.to)):''}</small><br>${x.subject?`<b>${esc(x.subject)}</b><br>`:''}${esc(x.text)}${attHTML(x)}
+   ${x.text?(t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`):''}</div>`}).join('');
+  bindAtt($('#thr'));$('#thr').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(T.find(x=>x.id==b.dataset.tr)));
   mark(T.map(x=>x.id));if(auto)T.filter(x=>x.uid!=U.id&&!tr[key(x)]).slice(0,12).forEach(doTr)};
  const detail=m=>{if(!m)return list();mode='detail';cur=m;const base=((ms.find(y=>y.id==root(m))||m).subject||'').replace(/^RE:\s*/i,''),t=m.to=='all'?'all':(m.uid==U.id?m.to:m.uid);
   v.innerHTML=`<div class="card"><div class="r" style="align-items:center;flex-wrap:nowrap"><button class="o" id="bk" style="width:auto">Back</button><b style="flex:1">${esc(sj(ms.find(x=>x.id==root(m))||m))}</b></div>
   <div class="r"><div><label>Translate into</label><select id="lg">${Object.entries(LANGS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div><label class="ck" style="flex:1.2;margin-top:24px"><input type="checkbox" id="au">Translate automatically</label></div></div>
   <div class="card" id="thr"></div>
-  <div class="card"><label>Reply to ${esc(nm(t))}</label><input id="rj" maxlength="130" value="${esc(base?'RE: '+base:'')}" placeholder="Subject"><textarea id="rx" rows="3" placeholder="Write a reply" style="margin-top:6px"></textarea><p class="e" id="er"></p><button id="sd">Send reply</button></div>`;
-  $('#lg').value=lang;$('#au').checked=auto;$('#bk').onclick=list;
+  <div class="card"><label>Reply to ${esc(nm(t))}</label><input id="rj" maxlength="130" value="${esc(base?'RE: '+base:'')}" placeholder="Subject"><textarea id="rx" rows="3" placeholder="Write a reply" style="margin-top:6px"></textarea><div id="rab" style="margin-top:8px"></div><p class="e" id="er"></p><button id="sd">Send reply</button></div>`;
+  $('#lg').value=lang;$('#au').checked=auto;$('#bk').onclick=list;const rab=attachBox($('#rab'));
   $('#lg').onchange=()=>{lang=$('#lg').value;localStorage.setItem('cc_lang',lang);drawThr()};
   $('#au').onchange=()=>{auto=$('#au').checked;localStorage.setItem('cc_auto',auto?'1':'0');drawThr()};
-  $('#sd').onclick=async()=>{const x=$('#rx').value.trim();if(!x){$('#er').textContent='Write a reply first.';return}$('#sd').disabled=true;
-   const o={uid:U.id,name:U.name,to:t,members:t=='all'?['all']:[U.id,t],text:x,thread:root(m),re:{id:m.id,name:m.name,subject:m.subject||'',text:(m.text||'').slice(0,100)}};const rs=$('#rj').value.trim();if(rs)o.subject=rs;
-   try{await DB.add('msgs',o);notify(t=='all'?us.map(y=>y.id):[t],(o.subject?o.subject+' - ':'')+'Message from '+U.name,x.slice(0,80),'msg');$('#rx').value='';$('#sd').disabled=false}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}};
+  $('#sd').onclick=async()=>{const x=$('#rx').value.trim(),F=rab.get();if(!x&&!F.length){$('#er').textContent='Write a reply or attach a file first.';return}$('#sd').disabled=true;
+   const mem=t=='all'?['all']:[U.id,t],o={uid:U.id,name:U.name,to:t,members:mem,text:x,thread:root(m),re:{id:m.id,name:m.name,subject:m.subject||'',text:(m.text||'').slice(0,100)}};const rs=$('#rj').value.trim();if(rs)o.subject=rs;
+   try{if(F.length){$('#er').textContent='Uploading...';o.att=await saveFiles(F,mem);$('#er').textContent=''}await DB.add('msgs',o);notify(t=='all'?us.map(y=>y.id):[t],(o.subject?o.subject+' - ':'')+'Message from '+U.name,(x||'Sent '+F.length+' attachment(s)').slice(0,80),'msg');$('#rx').value='';rab.reset();$('#sd').disabled=false}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}};
   drawThr();scrollTo(0,0)};
  live('users',r=>{us=r;drawList()});live('msgs',r=>{ms=r;if(mode=='list')drawList();else drawThr()},['members','array-contains-any',['all',U.id]]);
  if(staff())live('enquiries',r=>{en=r;drawList()});
