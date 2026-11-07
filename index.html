@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>CleanCrew</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b6e7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CleanCrew"><link rel="apple-touch-icon" href="icon-192.png">
+<style>
+:root{--bg:#f1f4f6;--c:#fff;--ink:#0f2230;--m:#5a6b78;--l:#d9e1e7;--a:#0b6e7a;--ai:#fff;--as:#dff1f3;--w:#b4430f;--ok:#1b7a4b;--r:14px}
+@media(prefers-color-scheme:dark){:root{--bg:#0c161d;--c:#14232d;--ink:#e7eff4;--m:#93a6b3;--l:#263a47;--a:#4cc3d0;--ai:#05222a;--as:#173a43;--w:#f2a272;--ok:#5fd29a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 16px;background:var(--c);border-bottom:1px solid var(--l)}
+.brand{display:flex;align-items:center;gap:8px;font-size:1.05rem}.brand svg{width:26px;height:26px;stroke:var(--a);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#who{flex:0 1 auto;flex-wrap:nowrap}.who{font-size:.85rem}
+h2{font-size:1.15rem;margin:0 0 8px;letter-spacing:-.01em}
+main{max-width:720px;margin:0 auto;padding:16px 14px 0}
+.card{background:var(--c);border:1px solid var(--l);border-radius:var(--r);padding:16px;margin:0 0 14px}
+label{display:block;font-weight:600;font-size:.85rem;margin:12px 0 4px}
+input,select,textarea,button{font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid var(--l);background:var(--bg);color:var(--ink);width:100%}
+button{width:auto;white-space:nowrap;background:var(--a);color:var(--ai);border-color:var(--a);font-weight:600;cursor:pointer}
+button.o{background:transparent;color:var(--a)}button.d{background:var(--w);border-color:var(--w);color:#fff}button:disabled{opacity:.4}
+button.sm{padding:6px 10px;font-size:.85rem}
+.r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.r>*{flex:1}
+small,.m{color:var(--m);font-size:.84rem}.big{font-size:2.3rem;font-weight:700;letter-spacing:-.02em}.e{color:var(--w)}
+hr{border:0;border-top:1px solid var(--l);margin:12px 0}
+.tag{display:inline-block;padding:2px 9px;border-radius:99px;background:var(--as);color:var(--a);font-size:.74rem;font-weight:600}.tag.w{background:var(--w);color:#fff}
+.ck{display:flex;gap:8px;align-items:center;font-weight:400;font-size:1rem}.ck input{width:auto}
+table{border-collapse:collapse;width:100%;font-size:.82rem}th,td{border-bottom:1px solid var(--l);padding:6px 6px;text-align:left}th{background:var(--bg)}.sc{overflow-x:auto}
+a{color:var(--a)}[hidden]{display:none!important}
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;gap:2px;overflow-x:auto;background:var(--c);border-top:1px solid var(--l);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+#nav button{flex:0 0 auto;min-width:70px;display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;border:0;color:var(--m);padding:6px 8px;font-size:.68rem;font-weight:600;border-radius:10px}
+#nav button.on{color:var(--a);background:var(--as)}
+#nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hero{text-align:center;padding:22px 16px}.timer{font-size:2.8rem;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin:4px 0 14px}
+.bigbtn{width:100%;padding:18px;font-size:1.2rem;border-radius:var(--r)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--ok);margin-right:6px}
+.msg{padding:8px 12px;border-radius:12px;background:var(--bg);margin:8px 0;max-width:94%}.msg.me{background:var(--as);margin-left:auto}
+.tl{margin-top:4px;padding-top:4px;border-top:1px dashed var(--l);font-size:.92rem}
+.ln{display:grid;grid-template-columns:1fr 64px 84px 58px 34px;gap:6px;margin-bottom:6px}.ln input{padding:8px}.ln button{padding:6px}
+.site{background:var(--bg);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:.92rem;text-align:left}.site ul{margin:6px 0 0 18px;padding:0}
+table .gc{vertical-align:top;min-width:112px;padding:4px}.gc.lv{background:var(--bg)}.chip{background:var(--as);border-radius:8px;padding:4px 6px;margin:3px 0;font-size:.76rem;cursor:pointer;line-height:1.25}.chip.dr{background:transparent;border:1.5px dashed var(--a)}.chip.sl{outline:2px solid var(--a)}.gc .add{padding:2px 8px;margin-top:2px}
+table .gc .chip.y,.ev.y{background:#ffc800;color:#111}.chip.p,.ev.p{background:#e617c3;color:#fff}.chip.g,.ev.g{background:#2fb344;color:#fff}.ev.b{background:#4a8ae8;color:#fff}
+.tlw{overflow:auto;max-height:620px;border:1px solid var(--l);border-radius:10px}.tl{display:grid;position:relative}.th{position:sticky;top:0;z-index:3;background:var(--c);border-bottom:1px solid var(--l);border-left:1px solid var(--l);padding:6px 4px;font-weight:600;font-size:.8rem;text-align:center}
+.ax{position:relative}.ax div{position:absolute;font-size:.7rem;color:var(--m);padding-left:4px}.col{position:relative;border-left:1px solid var(--l);background-image:linear-gradient(var(--l) 1px,transparent 1px);background-size:100% 40px}
+.ev{position:absolute;border-radius:4px;font-size:.68rem;line-height:1.15;overflow:hidden;padding:1px 3px;cursor:pointer;border:1px solid rgba(0,0,0,.25)}.ev.dr,.chip.dr{border:2px dashed #111;opacity:.85}.ev.sl,.chip.sl{outline:3px solid var(--a)}
+.tag.lg{color:#111}.tag.lg.y{background:#ffc800}.tag.lg.p{background:#e617c3;color:#fff}.tag.lg.g{background:#2fb344;color:#fff}.tag.lg.b{background:#4a8ae8;color:#fff}
+details summary{cursor:pointer;color:var(--a);font-weight:600;font-size:.9rem}
+.doc table{border-collapse:collapse;width:100%;margin:16px 0}.doc th,.doc td{border-bottom:1px solid #bbb;padding:6px;text-align:left}.doc td.n,.doc th.n{text-align:right}.doc .g{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}.doc .s{opacity:.7;white-space:pre-line}.doc h1{margin:0 0 4px;font-size:22px}.doc .t{font-size:16px}
+@media print{.noprint,#nav,header{display:none!important}body{padding:0}}
+@media(min-width:900px){
+ body{padding:0 0 0 210px}
+ #nav{top:0;bottom:auto;right:auto;width:210px;flex-direction:column;border-top:0;border-right:1px solid var(--l);padding:18px 10px;overflow-y:auto}
+ #nav button{flex-direction:row;gap:12px;min-width:0;width:100%;font-size:.92rem;padding:11px 12px}
+}
+#wfm:not([hidden]){position:fixed;left:50%;top:5vh;transform:translateX(-50%);width:min(560px,94vw);max-height:88vh;overflow:auto;z-index:60;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}#wmb{position:sticky;top:0;z-index:20;max-height:55vh;overflow:auto;border:2px solid #b24a0e}#wact{position:sticky;top:0;z-index:20;max-height:50vh;overflow:auto;border:2px solid var(--pr,#0b6e7a)}.lcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.lcal>div{min-height:54px;border:1px solid var(--ln,#ddd);border-radius:6px;padding:2px;font-size:.7rem;overflow:hidden}.lcal .h{min-height:0;border:0;text-align:center;font-weight:600}.lcal .lt{display:block;background:var(--as);border-radius:4px;margin-top:2px;padding:0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lcal .lt.pn{opacity:.6;border:1px dashed currentColor}.lcal .td{outline:2px solid #0b6e7a}.lcal .ho{background:#fff4d6}</style></head><body>
+<header><div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 8.8"/></svg><b>CleanCrew</b></div><div id="who" class="r"></div></header>
+<div id="toast" class="card" hidden style="position:fixed;top:60px;left:12px;right:12px;z-index:9;max-width:520px;margin:auto;border-color:var(--a)"></div>
+<main><div id="off" class="card e" hidden><small>You are offline. Clock in, clock out and edits are saved on this phone and sync when the signal returns.</small></div><div id="demo"></div><div id="view"></div></main><nav id="nav"></nav>
+<script type="module">
+// ===== 1. Paste your Firebase config here (see SETUP.md). Leave null for single-device demo mode. =====
+const FIREBASE_CONFIG = null;
+// ===== Optional: Web Push key pair from Firebase > Project settings > Cloud Messaging (see SETUP.md 3d). Leave null if you do not use phone notifications. =====
+const VAPID_KEY = null;
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const rid=()=>Math.random().toString(36).slice(2,10);
+const tok=()=>Array.from(crypto.getRandomValues(new Uint8Array(20)),b=>'abcdefghjkmnpqrstuvwxyz23456789'[b%31]).join('');
+const fdt=t=>new Date(t).toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'});
+const hm=t=>new Date(t).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+const dk=t=>new Date(t-new Date(t).getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const addD=(d,n)=>{const x=new Date(d+'T12:00');x.setDate(x.getDate()+n);return dk(x.getTime())};
+const mon=d=>{const x=new Date(d+'T12:00');return addD(d,-((x.getDay()+6)%7))};
+const fdur=ms=>{const m=Math.round(ms/60000);return Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m'};
+const fsg=ms=>(ms<0?'-':'+')+fdur(Math.abs(ms));
+const mins=s=>{const[a,b]=s.split(':');return a*60+ +b};
+const eur=n=>new Intl.NumberFormat('fi-FI',{style:'currency',currency:'EUR'}).format(n||0);
+const DEF={rates:{regular:2.5,deep:4.5,moveout:5},freq:{once:1,weekly:.85,biweekly:.9,monthly:.95},extras:{Windows:40,Oven:25,Fridge:20},min:60,vat:25.5,phone:'',catalog:['Gloves','Cloths','Cleaning spray','Trash bags','Mop head'],pay:{day:8,week:40,eveS:18,eveE:22,nightS:22,nightE:6,eves:true}};
+const snap=c=>c?{name:c.name,addr:c.addr||'',code:c.code||'',contact:c.contact||'',tasks:c.tasks||[],notes:c.notes||'',lat:c.lat||null,lng:c.lng||null,office:!!c.office}:null;
+const dist=(a,b)=>{const R=6371e3,r=x=>x*Math.PI/180,p=r(b.lat-a.lat),q=r(b.lng-a.lng),h=Math.sin(p/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(q/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)))};
+// Finnish public holidays (computed, any year). eve=true: Christmas Eve and Midsummer Eve (treated as holidays by many agreements)
+const _hc={};
+function FH(y){if(_hc[y])return _hc[y];const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=(h+l-7*m+114)%31+1;
+ const E=new Date(Date.UTC(y,mo-1,da)),O={},add=(dt,n,eve)=>{O[dt.toISOString().slice(0,10)]={n,eve:!!eve}},R=n=>new Date(E.getTime()+n*864e5),D=(mm,dd)=>new Date(Date.UTC(y,mm-1,dd));
+ add(D(1,1),'New Year');add(D(1,6),'Epiphany');add(R(-2),'Good Friday');add(R(0),'Easter Sunday');add(R(1),'Easter Monday');add(D(5,1),'May Day');add(R(39),'Ascension Day');add(R(49),'Pentecost');
+ for(let x=19;x<=25;x++){const t=D(6,x);if(t.getUTCDay()==5){add(t,'Midsummer Eve',1);add(new Date(t.getTime()+864e5),'Midsummer Day')}}
+ for(let x=31;x<=37;x++){const t=D(10,x);if(t.getUTCDay()==6){add(t,'All Saints Day');break}}
+ add(D(12,6),'Independence Day');add(D(12,24),'Christmas Eve',1);add(D(12,25),'Christmas Day');add(D(12,26),'Boxing Day');return _hc[y]=O}
+const hol=d=>FH(+d.slice(0,4))[d]||null;
+const clabel=c=>c.name+(c.addr?' - '+c.addr:'');
+const cfind=(cu,v)=>cu.find(c=>clabel(c)==v.trim())||null;
+const fl=f=>Array.isArray(f[0])?f:[f];
+const siteHTML=s=>s?`<div class="site"><b>${esc(s.name)}</b><br>${esc(s.addr)}${s.code?`<br>Access: <b>${esc(s.code)}</b>`:''}${s.contact?`<br>Contact: ${esc(s.contact)}`:''}${s.notes?`<br><small>${esc(s.notes)}</small>`:''}${(s.tasks||[]).length?`<ul>${s.tasks.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}</div>`:'';
+const ICO={arch:'<path d="M4 7h16v13H4zM3 4h18v3H3zM10 12h4"/>',swap:'<path d="M7 7h12l-3-3M17 17H5l3 3"/>',quote:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',plan:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',cust:'<path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',leave:'<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/>',msg:'<path d="M4 5h16v11H9l-5 4z"/>',items:'<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/>',rep:'<path d="M5 20V10M12 20V4M19 20v-7"/>',team:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4 2 4 5"/>',inv:'<path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/>',set:'<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/>'};
+const ic=k=>`<svg viewBox="0 0 24 24" aria-hidden="true">${ICO[k]}</svg>`;
+
+// ===== 2. DATA LAYER: same interface for demo (this device) and Firebase (shared) =====
+const genpw=()=>Array.from(crypto.getRandomValues(new Uint8Array(12)),b=>'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789'[b%54]).join('');
+function localDB(){
+ const g=(k,d)=>JSON.parse(localStorage.getItem('cc_'+k)||JSON.stringify(d)),s=(k,v)=>localStorage.setItem('cc_'+k,JSON.stringify(v));
+ const op1=(x,f)=>{const a=x[f[0]],o=f[1],t=f[2];return o=='=='?a==t:o=='>='?a>=t:o=='<='?a<=t:(a||[]).some(y=>t.includes(y))};
+ const ok=(x,f)=>!f||fl(f).every(g=>op1(x,g));
+ const ws={},all=(c,f)=>g(c,[]).filter(x=>ok(x,f)).sort((a,b)=>b.ts-a.ts);
+ const fire=c=>(ws[c]||[]).forEach(w=>w.f(all(c,w.flt)));
+ const cur=()=>{const u=g('users',[]).find(x=>x.id==g('me',null));return u&&u.active!==false?u:null};
+ return{demo:1,cur:async()=>cur(),
+  hasOwner:async()=>g('users',[]).length>0,
+  signup:async(name,email,pw,phone)=>{if(g('users',[]).length)throw Error('Setup is already done. Ask the owner to add you.');
+   const n={id:rid(),name,email,pw,phone,role:'owner',active:true,ts:Date.now()};s('users',[n]);s('me',n.id);return n},
+  login:async(email,pw)=>{const n=g('users',[]).find(x=>x.email==email&&x.pw==pw);if(!n)throw Error('Wrong email or password');
+   if(n.active===false)throw Error('This account has been removed. Contact the owner.');s('me',n.id);return n},
+  reset:async()=>{throw Error('Password reset by email works in the online version only.')},
+  addUser:async(name,email,phone,role)=>{const u=g('users',[]);if(u.some(x=>x.email==email))throw Error('That email already has an account');
+   const pw=genpw();s('users',[...u,{id:rid(),name,email,pw,phone,role,active:true,ts:Date.now()}]);fire('users');return pw},
+  logout:async()=>s('me',null),
+  add:async(c,o)=>{const id=rid();s(c,[...g(c,[]),{...o,id,ts:Date.now()}]);fire(c);return id},
+  upd:async(c,id,p)=>{s(c,g(c,[]).map(x=>x.id==id?{...x,...p}:x));fire(c)},
+  del:async(c,id)=>{s(c,g(c,[]).filter(x=>x.id!=id));fire(c)},
+  getD:async(c,id)=>g('d_'+c+'_'+id,null),setD:async(c,id,o)=>s('d_'+c+'_'+id,o),updD:async(c,id,p)=>s('d_'+c+'_'+id,{...g('d_'+c+'_'+id,{}),...p}),
+  get:async(c,id)=>g(c,[]).find(x=>x.id==id)||null,list:async(c,f)=>all(c,f),put:async(c,id,o)=>{s(c,[...g(c,[]).filter(x=>x.id!=id),{...o,id,ts:Date.now()}]);fire(c)},pushOn:async()=>{throw Error('Phone notifications need the online version.')},
+  watch:(c,f,flt)=>{const w={f,flt};(ws[c]=ws[c]||[]).push(w);f(all(c,flt));return()=>{ws[c]=ws[c].filter(x=>x!=w)}},
+  getS:async()=>g('settings',DEF),setS:async o=>s('settings',o)};
+}
+async function fbDB(){
+ const B='https://www.gstatic.com/firebasejs/10.14.1/';
+ const {initializeApp}=await import(B+'firebase-app.js'),A=await import(B+'firebase-auth.js'),F=await import(B+'firebase-firestore.js');
+ const app=initializeApp(FIREBASE_CONFIG),au=A.getAuth(app);let db;
+ try{db=F.initializeFirestore(app,{localCache:F.persistentLocalCache({tabManager:F.persistentMultipleTabManager()})})}catch(e){db=F.getFirestore(app)}
+ const prof=async u=>{if(!u)return null;const d=await F.getDoc(F.doc(db,'users',u.uid));if(!d.exists())return null;
+  if(d.data().active===false){await A.signOut(au);throw Error('This account has been removed. Contact the owner.')}return{id:u.uid,...d.data()}};
+ const init=()=>F.getDoc(F.doc(db,'settings','init'));
+ return{
+  cur:()=>new Promise(r=>{const o=A.onAuthStateChanged(au,u=>{o();prof(u).then(r,()=>r(null))})}),
+  hasOwner:async()=>(await init()).exists(),
+  signup:async(name,email,pw,phone)=>{if((await init()).exists())throw Error('Setup is already done. Ask the owner to add you.');
+   const u=(await A.createUserWithEmailAndPassword(au,email,pw)).user,p={name,email,phone:phone||'',role:'owner',active:true,ts:Date.now()};
+   await F.setDoc(F.doc(db,'users',u.uid),p);await F.setDoc(F.doc(db,'settings','init'),{ts:Date.now()});return{id:u.uid,...p}},
+  login:async(e,p)=>prof((await A.signInWithEmailAndPassword(au,e,p)).user),
+  reset:e=>A.sendPasswordResetEmail(au,e),
+  addUser:async(name,email,phone,role)=>{const pw=genpw(),sa=A.getAuth(initializeApp(FIREBASE_CONFIG,'s'+Date.now()));
+   const u=(await A.createUserWithEmailAndPassword(sa,email,pw)).user;await A.signOut(sa);
+   await F.setDoc(F.doc(db,'users',u.uid),{name,email,phone:phone||'',role,active:true,ts:Date.now()});return pw},
+  logout:()=>A.signOut(au),
+  // nw = do not wait for the server, so the app also works offline and syncs later
+  add:async(c,o,nw)=>{const r=F.doc(F.collection(db,c)),p=F.setDoc(r,{...o,ts:Date.now()});if(nw){p.catch(e=>console.error(c,e));return r.id}await p;return r.id},
+  upd:(c,id,p,nw)=>{const q=F.updateDoc(F.doc(db,c,id),p);if(nw){q.catch(e=>console.error(c,e));return Promise.resolve()}return q},
+  get:async(c,id)=>{const d=await F.getDoc(F.doc(db,c,id));return d.exists()?{id,...d.data()}:null},
+  list:async(c,f)=>(await F.getDocs(f?F.query(F.collection(db,c),...fl(f).map(g=>F.where(...g))):F.collection(db,c))).docs.map(d=>({id:d.id,...d.data()})),
+  put:(c,id,o)=>F.setDoc(F.doc(db,c,id),{...o,ts:Date.now()}),
+  pushOn:async vapid=>{const M=await import(B+'firebase-messaging.js'),reg=await navigator.serviceWorker.ready,t=await M.getToken(M.getMessaging(app),{vapidKey:vapid,serviceWorkerRegistration:reg});if(!t)throw Error('Could not get a notification token.');await F.setDoc(F.doc(db,'tokens',t),{uid:au.currentUser.uid,ts:Date.now()});return t},
+  del:(c,id)=>F.deleteDoc(F.doc(db,c,id)),
+  getD:async(c,id)=>{const d=await F.getDoc(F.doc(db,c,id));return d.exists()?d.data():null},setD:(c,id,o)=>F.setDoc(F.doc(db,c,id),o),updD:(c,id,p)=>F.updateDoc(F.doc(db,c,id),p),
+  watch:(c,f,flt)=>F.onSnapshot(flt?F.query(F.collection(db,c),...fl(flt).map(g=>F.where(...g))):F.collection(db,c),
+   s=>f(s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.ts-a.ts)),e=>console.error(c,e)),
+  getS:async()=>{const d=await F.getDoc(F.doc(db,'settings','main'));return d.exists()?d.data():DEF},
+  setS:o=>F.setDoc(F.doc(db,'settings','main'),o)};
+}
+
+// ===== 3. APP =====
+let DB,U=null,S=DEF,tab='quote',un=[];
+const staff=()=>U&&U.role!='employee';
+const mine=()=>staff()?null:['uid','==',U.id];
+const live=(c,f,flt,all)=>un.push(DB.watch(c,f,flt,all));
+// TO ADD A FEATURE: write function name(v){...}, add an icon to ICO, and add one line below. roles = who sees it; pub = visible without login.
+const ST=['owner','supervisor'];
+const MODS=[
+ {id:'quote',t:'Quote',i:'quote',pub:1,r:quote},
+ {id:'clock',t:'Clock',i:'clock',r:clock},
+ {id:'shifts',t:'Shifts',i:'swap',r:shiftsTab},
+ {id:'inbox',t:'Inbox',i:'msg',hid:1,r:inboxTab},
+ {id:'plan',t:'Plan shifts',i:'plan',r:plan,roles:ST},
+ {id:'cust',t:'Customers',i:'cust',r:customers,roles:ST},
+ {id:'leave',t:'Leave',i:'leave',r:leave},
+ {id:'msg',t:'Messages',i:'msg',r:msgs},
+ {id:'items',t:'Items',i:'items',r:items},
+ {id:'rep',t:'Reports',i:'rep',r:reports,roles:ST},
+ {id:'inv',t:'Invoices',i:'inv',r:invoices,roles:['owner']},
+ {id:'team',t:'Team',i:'team',r:team,roles:ST},
+ {id:'rec',t:'Records',i:'arch',r:records,roles:['owner']},
+ {id:'set',t:'Settings',i:'set',r:settings,roles:['owner']}];
+const can=m=>m.pub||(U&&(!m.roles||m.roles.includes(U.role)));
+
+function render(){
+ un.forEach(f=>f());un=[];
+ $('#demo').innerHTML=DB.demo?'<p class="card e"><small>Demo mode: data stays on this device only. Add your Firebase config (SETUP.md) to share between phones.</small></p>':'';
+ $('#who').innerHTML=U?`<span class="who">${esc(U.name)} <span class="tag">${U.role}</span></span><button class="o sm" id="bell">Inbox</button><button class="o sm" id="lo">Log out</button>`:'<button class="sm" id="li">Staff login</button>';
+ const all=MODS.filter(can),ms=all.filter(m=>!m.hid);if(tab!='auth'&&!all.some(m=>m.id==tab))tab='quote';
+ $('#nav').innerHTML=ms.map(m=>`<button class="${m.id==tab?'on':''}" data-t="${m.id}">${ic(m.i)}<span>${m.t}</span></button>`).join('');
+ const v=$('#view');v.innerHTML='';
+ if(U&&consent===false&&tab!='auth'){consentView(v);return}
+ tab=='auth'?auth(v):MODS.find(m=>m.id==tab).r(v);
+ bell();scrollTo(0,0);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.t){tab=b.dataset.t;render()}
+ if(b.id=='li'){tab='auth';render()}
+ if(b.id=='bell'){tab='inbox';render()}
+ if(b.id=='lo'){stopTrack();DB.logout().then(()=>{U=null;tab='quote';render()})}});
+
+// Live location: runs while a shift is open. A web app cannot read the GPS with the screen off, so the app keeps the screen awake,
+// saves a route point every 5 minutes, and tells supervisors when the app went to the background.
+let consent=null,trk=null,gid=null,iv2=null,openId=null,lastSent=0,lastTrail=0,wl=null,lastPos=null,trail=[],inbox=[],nu=null,seen=null,tt=null;
+const wake=async()=>{try{wl=await navigator.wakeLock.request('screen')}catch(e){}};
+const mkpt=p=>({lat:+p.coords.latitude.toFixed(5),lng:+p.coords.longitude.toFixed(5),acc:Math.round(p.coords.accuracy),ts:Date.now()});
+function pushLive(pt,force){if(!openId)return;lastPos=pt;if(!force&&Date.now()-lastSent<30000)return;lastSent=Date.now();const patch={live:pt};
+ if(Date.now()-lastTrail>3e5){lastTrail=Date.now();trail=[...trail,{lat:pt.lat,lng:pt.lng,ts:pt.ts}].slice(-300);patch.trail=trail}
+ DB.upd('shifts',openId,patch,1)}
+const poll=()=>navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>pushLive(mkpt(p),true),()=>{},{enableHighAccuracy:true,timeout:15000});
+document.addEventListener('visibilitychange',()=>{if(!openId)return;
+ if(document.visibilityState=='visible'){wake();poll()}
+ else if(lastPos)DB.upd('shifts',openId,{live:{...lastPos,bg:Date.now()}},1)});
+function startTrack(){stopTrack();startNotif();DB.list('consents',['uid','==',U.id]).then(r=>{consent=r.some(x=>x.version>=CONSENT_V);if(!consent)render()},()=>{});trk=DB.watch('shifts',r=>{const o=r.find(x=>!x.t1);openId=o?o.id:null;
+ if(o&&gid==null&&navigator.geolocation){trail=o.trail||[];lastPos=o.live||null;wake();
+  gid=navigator.geolocation.watchPosition(p=>pushLive(mkpt(p)),()=>{},{enableHighAccuracy:true});
+  iv2=setInterval(()=>{if(openId&&document.visibilityState=='visible'&&Date.now()-lastSent>60000)poll()},30000)}
+ if(!o&&gid!=null){navigator.geolocation.clearWatch(gid);gid=null;clearInterval(iv2);wl&&wl.release()}},['uid','==',U.id])}
+function stopTrack(){trk&&trk();trk=null;gid!=null&&navigator.geolocation.clearWatch(gid);gid=null;clearInterval(iv2);openId=null;consent=null;wl&&wl.release();stopNotif()}
+
+// In-app inbox + toast. Phone (push) notifications are sent by the Cloud Function in SETUP.md.
+const toast=m=>{const t=$('#toast');if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,6000)};
+const bell=()=>{const b=$('#bell');if(b)b.textContent='Inbox'+(inbox.length?' ('+inbox.length+')':'')};
+function startNotif(){stopNotif();nu=DB.watch('notifs',r=>{inbox=r;
+ if(seen===null){seen=new Set(r.map(x=>x.id));r.filter(x=>Date.now()-x.ts>5*864e5).forEach(x=>DB.purge('notifs',x.id))}
+ else{const n=r.filter(x=>!seen.has(x.id));n.forEach(x=>seen.add(x.id));if(n.length)toast(n[0].title+': '+n[0].body)}bell()},['to','==',U.id])}
+function stopNotif(){nu&&nu();nu=null;seen=null;inbox=[]}
+async function notify(ids,title,body,tab){const L=[...new Set(ids)].filter(x=>x&&x!=U.id);
+ await Promise.all(L.map(to=>DB.add('notifs',{to,title,body,tab:tab||'',from:U.id},1).catch(()=>{})))}
+const staffIds=async()=>(await DB.list('users')).filter(x=>x.active!==false&&x.role!='employee').map(x=>x.id);
+const allIds=async()=>(await DB.list('users')).filter(x=>x.active!==false).map(x=>x.id);
+
+async function auth(v){
+ const first=!(await DB.hasOwner());let up=false;
+ const draw=()=>{v.innerHTML=`<div class="card"><h2>${up?'Set up the owner account':'Login'}</h2>
+ ${up?'<label>Your name</label><input id="n"><label>Phone</label><input id="ph" type="tel">':''}<label>Email</label><input id="em" type="email" autocomplete="username"><label>Password</label><input id="pw" type="password" autocomplete="current-password">
+ <p class="e" id="er"></p><button id="go">${up?'Create owner account':'Log in'}</button>
+ ${up?'':'<p><a href="#" id="fg">Forgot password?</a></p>'}${first&&!up?'<p><a href="#" id="su">First time? Set up the owner account</a></p>':''}
+ <small>Accounts are created by the owner. Log in with the email and password you were given.</small></div>`;
+ const er=(m,ok)=>{$('#er').className=ok?'m':'e';$('#er').textContent=m};
+ if($('#su'))$('#su').onclick=e=>{e.preventDefault();up=true;draw()};
+ if($('#fg'))$('#fg').onclick=async e=>{e.preventDefault();const em=$('#em').value.trim();if(!em){er('Type your email above first.');return}
+  try{await DB.reset(em);er('Reset email sent. Check your inbox and spam folder.',1)}catch(x){er(x.message)}};
+ $('#go').onclick=async()=>{const em=$('#em').value.trim(),pw=$('#pw').value;
+  try{U=await(up?DB.signup($('#n').value.trim()||em,em,pw,$('#ph').value.trim()):DB.login(em,pw));if(!U)throw Error('No account found for this login. Ask the owner.');tab='clock';startTrack();render()}catch(x){er(x.message)}}};
+ draw();
+}
+
+function quote(v){
+ const R=S.rates,nm=k=>k=='moveout'?'Move-out':k[0].toUpperCase()+k.slice(1);
+ v.innerHTML=`<div class="card"><h2>Cleaning price estimate</h2>
+ <label>Service</label><select id="sv">${Object.keys(R).map(k=>`<option value="${k}">${nm(k)} cleaning</option>`).join('')}</select>
+ <label>Home size (m²)</label><input id="m2" type="number" min="10" value="50">
+ <label>How often</label><select id="fq">${Object.keys(S.freq).map(k=>`<option>${k}</option>`).join('')}</select>
+ <label>Extras</label>${Object.entries(S.extras).map(([k,p])=>`<label class="ck"><input type="checkbox" class="ex" value="${p}"> ${esc(k)} (+€${p})</label>`).join('')}
+ <hr><div class="big" id="pr"></div><small id="sb"></small>${S.phone?'<p><a id="wa" target="_blank" rel="noopener">Send this enquiry on WhatsApp</a></p>':''}</div>
+ <div class="card"><h2>Message us</h2><label>Your name</label><input id="qn"><label>Phone or email</label><input id="qc"><label>Message</label><textarea id="qt" rows="3"></textarea>
+ <p class="m" id="qr"></p><button id="qs">Send</button></div>`;
+ const calc=()=>{const m2=+$('#m2').value||0,fq=$('#fq').value,ex=[...v.querySelectorAll('.ex')].reduce((a,x)=>a+(x.checked?+x.value:0),0);
+  const net=Math.max(S.min,R[$('#sv').value]*m2*S.freq[fq])+ex,gross=net*(1+S.vat/100);
+  $('#pr').textContent='€'+gross.toFixed(2);$('#sb').textContent=`per visit, incl. VAT ${S.vat}%. Estimate only.`;
+  if(S.phone)$('#wa').href='https://wa.me/'+S.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(`Hi, I'd like a quote: ${nm($('#sv').value)} cleaning, ${m2} m², ${fq}. Estimate €${gross.toFixed(0)}.`)};
+ v.querySelectorAll('#sv,#m2,#fq,.ex').forEach(x=>x.oninput=calc);calc();
+ $('#qs').onclick=async()=>{const n=$('#qn').value.trim(),c=$('#qc').value.trim(),t=$('#qt').value.trim();
+  if(!n||!c||!t){$('#qr').textContent='Please fill in all three fields.';return}
+  try{await DB.add('enquiries',{name:n,contact:c,text:t,done:false});$('#qr').textContent='Sent. We will contact you soon.';$('#qt').value=''}catch(e){$('#qr').textContent='Could not send. Please try again.'}};
+}
+
+function clock(v){
+ v.innerHTML=`<div class="card hero"><div id="st" class="m"></div><div class="timer" id="tm">0:00:00</div><div id="pn" class="m"></div>
+ <div id="ps" style="text-align:left" hidden><label>Where are you working?</label><select id="pw"></select>
+ <div id="pq" hidden><input id="pt" list="pdl" placeholder="Search customer" autocomplete="off" style="margin-top:8px"><datalist id="pdl"></datalist></div>
+ <input id="pd" placeholder="Note (optional)" style="margin-top:8px"></div>
+ <div id="sd"></div>
+ <button class="bigbtn" id="ci">Clock in</button><button class="bigbtn d" id="co">Clock out</button>
+ <p class="e" id="er"></p><small>While you are clocked in, your location is shared with your supervisors and the owner. Keep this app open and the screen on: phones pause web apps when the screen locks, and supervisors will see that the app is in the background. Sharing stops when you clock out. Clocking in and out also works without a signal and syncs later.</small></div>
+ ${staff()?'<div class="card"><b>On shift now</b><div id="on"></div></div>':''}
+ <div class="card"><b>My upcoming shifts</b><div id="up"></div></div>
+ <div class="card"><b>${staff()?'All shifts (last 45 days)':'My shifts'}</b> <small id="tot"></small><div id="l"></div></div>`;
+ let rows=[],pls=[],ed=null,cur=null,sgU='',sgS='',psig='',places=null,touched=false;
+ const tick=()=>{const ms=cur?Date.now()-cur.t0:0,s=Math.floor(ms/1000);$('#tm').textContent=Math.floor(s/3600)+':'+String(Math.floor(s/60)%60).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+ const iv=setInterval(tick,1000);un.push(()=>clearInterval(iv));
+ const loc=()=>new Promise((ok,no)=>navigator.geolocation?navigator.geolocation.getCurrentPosition(
+  p=>ok({lat:+p.coords.latitude.toFixed(5),lng:+p.coords.longitude.toFixed(5),acc:Math.round(p.coords.accuracy)}),
+  ()=>no(Error('Location is required. Allow location access in your browser and try again.')),{enableHighAccuracy:true,timeout:15000}):no(Error('This device does not support location.')));
+ const open=()=>rows.find(x=>x.uid==U.id&&!x.t1);
+ const map=p=>p?`<a href="https://maps.google.com/?q=${p.lat},${p.lng}" target="_blank" rel="noopener">map</a>`:'';
+ const route=x=>{const t=x.trail||[],pts=[x.inLoc,...t.filter((_,i)=>t.length<=8||i%Math.ceil(t.length/8)==0),x.outLoc||x.live].filter(Boolean);
+  return pts.length>1?`<a href="https://www.google.com/maps/dir/${pts.map(p=>p.lat+','+p.lng).join('/')}" target="_blank" rel="noopener">route (${t.length} points)</a>`:''};
+ const todays=()=>pls.filter(p=>p.date==dk(Date.now())&&!p.open&&!rows.some(s=>s.planId==p.id)).sort((a,b)=>a.start.localeCompare(b.start));
+ const selPlan=()=>{const w=$('#pw').value;return w&&w[0]=='p'?pls.find(p=>p.id==w.slice(2)):null};
+ const dl=t=>t?new Date(t-new Date(t).getTimezoneOffset()*6e4).toISOString().slice(0,16):'';
+ const lst=()=>{$('#l').innerHTML=rows.map(x=>ed==x.id?`<hr><b>Edit shift</b>${staff()?' - '+esc(x.name):''}<label>Start</label><input id="e0" type="datetime-local" value="${dl(x.t0)}">
+  <label>End (leave empty if still working)</label><input id="e1" type="datetime-local" value="${dl(x.t1)}"><p class="e" id="ee"></p><div class="r"><button data-s="${x.id}">Save</button><button class="o" data-c="1">Cancel</button></div>`
+  :`<hr>${staff()?`<b>${esc(x.name)}</b><br>`:''}${fdt(x.t0)} to ${x.t1?fdt(x.t1):'now'} (${fdur((x.t1||Date.now())-x.t0)})${x.edited?' <span class="tag">edited</span>':''}${x.unplanned?' <span class="tag">unplanned</span>':''}${x.dist!=null?(x.dist<=200?' <span class="tag">at site</span>':` <span class="tag w">${x.dist} m from site</span>`):''}<br><small>${x.place?esc(x.place)+' | ':''}${x.note&&!x.other?esc(x.note)+' | ':''}In: ${map(x.inLoc)} ${x.outLoc?'Out: '+map(x.outLoc):''}${x.tasksTotal?' | Tasks '+(x.ticks||[]).length+'/'+x.tasksTotal:''} ${route(x)}</small> <button class="o sm" data-e="${x.id}">Edit</button>`).join('')||'<p class="m">No shifts yet.</p>';
+  $('#l').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{ed=b.dataset.e;lst()});
+  $('#l').querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ed=null;lst()});
+  $('#l').querySelectorAll('[data-s]').forEach(b=>b.onclick=async()=>{const x=rows.find(y=>y.id==b.dataset.s),t0=new Date($('#e0').value).getTime(),t1=$('#e1').value?new Date($('#e1').value).getTime():0;
+   if(!t0||(t1&&t1<=t0)||t0>Date.now()||t1>Date.now()){$('#ee').textContent='Check the times. End must be after start and not in the future.';return}
+   audit('shifts',x.id,'edited',(x.name||'')+': start '+fdt(x.t0)+' -> '+fdt(t0)+', end '+(x.t1?fdt(x.t1):'open')+' -> '+(t1?fdt(t1):'open'));await DB.upd('shifts',x.id,{t0,t1,edited:true,orig:x.orig||{t0:x.t0,t1:x.t1},...(t1?{live:null}:{})},1);ed=null;lst()})};
+ const modeUI=()=>{const m=$('#pw').value;$('#pq').hidden=m!='c';$('#pd').placeholder=m=='x'?'Place name and what you are doing (required)':'Note (optional)'};
+ const mode=async()=>{modeUI();const m=$('#pw').value;
+  if(m=='c'&&places===null){places=[];try{places=(await DB.list('places')).filter(x=>x.active!==false).sort((a,b)=>a.name.localeCompare(b.name))}catch(e){}
+   if(!$('#pdl'))return;$('#pdl').innerHTML=places.map(x=>`<option value="${esc(x.name)}">`).join('')}
+  sgS='';draw()};
+ const draw=()=>{const o=open(),T=todays(),pp=o&&o.planId?pls.find(p=>p.id==o.planId):null;cur=o||null;
+  $('#st').innerHTML=o?`<span class="dot"></span>Clocked in since <b>${fdt(o.t0)}</b>${o.place?' at '+esc(o.place):''}`:'You are clocked out';$('#ci').disabled=!!o;$('#co').disabled=!o;$('#ci').hidden=!!o;$('#co').hidden=!o;$('#ps').hidden=!!o;tick();
+  if(!o){const sg=JSON.stringify(T.map(p=>p.id));if(sg!=psig){psig=sg;const keep=$('#pw').value;
+   $('#pw').innerHTML=T.map(p=>`<option value="p:${p.id}">${p.start}-${p.end} ${esc(p.place)}</option>`).join('')+'<option value="c">Another customer</option><option value="x">Other (write the place below)</option>';
+   if(touched&&[...$('#pw').options].some(x=>x.value==keep))$('#pw').value=keep;modeUI();if($('#pw').value=='c')mode()}}
+  $('#pn').textContent=!o&&T.length?`Next: ${T[0].place}, ${T[0].start} to ${T[0].end}`:'';
+  const tp=o?pp:selPlan(),site=tp&&tp.site,sg=JSON.stringify([o&&o.id,o&&o.ticks,tp&&tp.id,site]);
+  if(sg!=sgS){sgS=sg;
+   $('#sd').innerHTML=!site?'':o?`<div class="site"><b>${esc(site.name)}</b><br>${esc(site.addr)}${site.code?`<br>Access: <b>${esc(site.code)}</b>`:''}${site.notes?`<br><small>${esc(site.notes)}</small>`:''}${site.tasks.length?`<hr><b>Tasks</b>${site.tasks.map((t,i)=>`<label class="ck"><input type="checkbox" class="tk" data-i="${i}" ${(o.ticks||[]).includes(i)?'checked':''}>${esc(t)}</label>`).join('')}`:''}</div>`:siteHTML(site);
+   $('#sd').querySelectorAll('.tk').forEach(c=>c.onchange=()=>{const t=[...$('#sd').querySelectorAll('.tk')].filter(x=>x.checked).map(x=>+x.dataset.i);DB.upd('shifts',o.id,{ticks:t,tasksTotal:site.tasks.length},1)})}
+  const up=pls.filter(p=>p.date>=dk(Date.now())).sort((a,b)=>(a.date+a.start).localeCompare(b.date+b.start)).slice(0,7),su=JSON.stringify(up);
+  if(su!=sgU){sgU=su;$('#up').innerHTML=up.map(p=>`<div style="margin-top:6px">${p.date} ${p.start}-${p.end}, ${esc(p.place)}${p.site?`<details><summary>Customer details</summary>${siteHTML(p.site)}</details>`:''}</div>`).join('')||'<span class="m">Nothing planned.</span>'}
+  if(staff())$('#on').innerHTML=rows.filter(x=>!x.t1).map(x=>{const L=x.live,age=L?Math.max(0,Math.round((Date.now()-L.ts)/60000)):0;
+   return`<div><span class="dot"></span><b>${esc(x.name)}</b> since ${hm(x.t0)}${x.place?' at '+esc(x.place):''}, ${L?`${map(L)} ${L.bg?`<span class="e">app in background since ${hm(L.bg)}, location paused</span>`:age>10?`<span class="e">no update for ${age} min (phone may be locked)</span>`:`(updated ${age} min ago)`}`:'waiting for location'}</div>`}).join('')||'<span class="m">Nobody is clocked in.</span>';
+  $('#tot').textContent='Total: '+fdur(rows.reduce((a,x)=>a+((x.t1||Date.now())-x.t0),0));
+  if(!ed)lst()};
+ $('#pw').onchange=()=>{touched=true;mode()};
+ live('shifts',r=>{rows=r;draw()},staff()?['t0','>=',Date.now()-45*864e5]:mine());
+ live('plans',r=>{pls=r.filter(p=>p.pub!==false);draw()},['uid','==',U.id]);
+ $('#ci').onclick=async()=>{$('#er').textContent='';try{
+  const m=$('#pw').value,note=$('#pd').value.trim(),o={uid:U.id,name:U.name,t0:Date.now(),t1:0,planId:'',place:'',siteId:'',unplanned:false,note};let tp=null;
+  if(m[0]=='p'){tp=pls.find(p=>p.id==m.slice(2));o.planId=tp.id;o.place=tp.place;o.siteId=tp.siteId||'';o.tasksTotal=tp.site?tp.site.tasks.length:0}
+  else if(m=='c'){const nm=$('#pt').value.trim();if(!nm)throw Error('Choose or type the customer name.');const pl=(places||[]).find(x=>x.name==nm);o.place=nm;o.siteId=pl?pl.id:'';o.unplanned=true}
+  else{if(!note)throw Error('Write the place name in the box.');o.place=note;o.other=true;o.unplanned=true}
+  const p=await loc();o.inLoc=p;if(tp&&tp.site&&tp.site.lat)o.dist=dist(p,tp.site);
+  touched=false;await DB.add('shifts',o,1)}catch(e){$('#er').textContent=e.message}};
+ $('#co').onclick=async()=>{$('#er').textContent='';const o=open();if(!o)return;try{const p=await loc();await DB.upd('shifts',o.id,{t1:Date.now(),outLoc:p,live:null},1)}catch(e){$('#er').textContent=e.message}};
+}
+
+// ---- Customers and sites (owner and supervisors) ----
+function customers(v){
+ let cu=[],sc=[],pn=[],ed=null,pos=null,lim=40;const t0=dk(Date.now());
+ v.innerHTML=`<div class="card"><h2 id="ct">New customer or site</h2>
+ <label>Name</label><input id="cn"><label>Address</label><input id="ca">
+ <div class="r"><div><label>Access code or key info</label><input id="cc"></div><div><label>Contact person and phone</label><input id="cp"></div></div>
+ <label>Task checklist (one task per line)</label><textarea id="ck" rows="5" placeholder="Vacuum floors&#10;Clean bathroom&#10;Empty bins"></textarea>
+ <label>Notes (pets, parking, special care)</label><textarea id="cm" rows="2"></textarea>
+ <label class="ck"><input type="checkbox" id="co2">Our own office or internal work (shown pink in the calendar)</label>
+ <div class="r" style="margin-top:10px"><button class="o" id="gp">Save my current position as the site location</button></div><small id="pl">Optional. Stand at the site and tap it. The Clock tab then flags clock-ins made far from the site.</small>
+ <p class="e" id="er"></p><div class="r"><button id="sv">Save</button><button class="o" id="cx" hidden>Cancel</button></div></div>
+ <div class="card"><h2>Missing visits, next 14 days</h2><small>Repeating schedules that have no shift planned on an expected day, for example because the employee was on leave.</small><div id="gaps"></div></div>
+ <div class="card"><b id="cc2">Customers</b><input id="sq" placeholder="Search by name or address" style="margin-top:8px"><div id="l"></div><div id="mo"></div></div><div class="card"><b>Archived</b><div id="ar"></div></div>`;
+ const reset=()=>{ed=null;pos=null;$('#ct').textContent='New customer or site';['cn','ca','cc','cp','ck','cm'].forEach(i=>$('#'+i).value='');$('#co2').checked=false;$('#sv').textContent='Save';$('#cx').hidden=true;$('#pl').textContent='Optional. Stand at the site and tap it. The Clock tab then flags clock-ins made far from the site.'};
+ const draw=()=>{const q=$('#sq').value.trim().toLowerCase(),A=cu.filter(c=>c.active!==false&&(!q||(c.name+' '+c.addr).toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name)),L=A.slice(0,lim);
+  $('#cc2').textContent='Customers ('+cu.filter(c=>c.active!==false).length+')';
+  $('#l').innerHTML=L.map(c=>`<hr><b>${esc(c.name)}</b>${c.lat?' <span class="tag">located</span>':''}<br><small>${esc(c.addr)}${c.code?' | Access: '+esc(c.code):''}${(c.tasks||[]).length?' | '+c.tasks.length+' tasks':''}</small>
+   <div class="r" style="margin-top:6px"><button class="o sm" data-ce="${c.id}">Edit</button><button class="d sm" data-ca="${c.id}">Archive</button></div>`).join('')||'<p class="m">No customers yet.</p>';
+  $('#mo').innerHTML=A.length>lim?`<hr><button class="o sm" id="more">Show more (${A.length-lim} left)</button>`:'';if($('#more'))$('#more').onclick=()=>{lim+=40;draw()};
+  $('#ar').innerHTML=cu.filter(c=>c.active===false).map(c=>`<hr>${esc(c.name)} <button class="o sm" data-cr="${c.id}">Restore</button>`).join('')||'<p class="m">None.</p>';
+  v.querySelectorAll('[data-ce]').forEach(b=>b.onclick=()=>{const c=cu.find(x=>x.id==b.dataset.ce);ed=c.id;pos=c.lat?{lat:c.lat,lng:c.lng}:null;$('#ct').textContent='Edit customer';$('#cn').value=c.name;$('#ca').value=c.addr;$('#cc').value=c.code||'';$('#cp').value=c.contact||'';
+   $('#ck').value=(c.tasks||[]).join('\n');$('#cm').value=c.notes||'';$('#co2').checked=!!c.office;$('#sv').textContent='Save changes';$('#cx').hidden=false;$('#pl').textContent=pos?'Site location saved.':'No site location yet.';scrollTo(0,0)});
+  v.querySelectorAll('[data-ca]').forEach(b=>b.onclick=async()=>{if(!confirm('Archive this customer? Shifts already planned stay.'))return;const c=cu.find(x=>x.id==b.dataset.ca);await DB.upd('customers',c.id,{active:false});await DB.put('places',c.id,{name:c.name,active:false})});
+  v.querySelectorAll('[data-cr]').forEach(b=>b.onclick=async()=>{const c=cu.find(x=>x.id==b.dataset.cr);await DB.upd('customers',c.id,{active:true});await DB.put('places',c.id,{name:c.name,active:true})});
+  // missing visits
+  const G=[];for(const s of sc.filter(x=>x.active))for(let i=0;i<14;i++){const k=addD(t0,i);if(hitS(s,k)&&!pn.some(p=>p.schedId==s.id&&p.date==k))G.push({s,k})}
+  G.sort((a,b)=>a.k.localeCompare(b.k));
+  $('#gaps').innerHTML=G.slice(0,40).map((g,i)=>`<hr><b>${g.k}</b> ${esc(g.s.place)} <small>${g.s.start}-${g.s.end}, planned for ${esc(g.s.name)}</small> <button class="o sm" data-og="${i}">Make open shift</button>`).join('')||'<p class="m">Nothing missing.</p>';
+  v.querySelectorAll('[data-og]').forEach(b=>b.onclick=async()=>{const g=G[+b.dataset.og],c=cu.find(x=>x.id==g.s.siteId);
+   await DB.add('plans',{uid:'',name:'Open shift',open:true,pub:true,place:g.s.place,date:g.k,start:g.s.start,end:g.s.end,schedId:g.s.id,siteId:g.s.siteId||'',site:snap(c)});
+   notify(await allIds(),'Open shift available',g.k+' '+g.s.start+'-'+g.s.end+' '+g.s.place,'shifts')})};
+ $('#sq').oninput=()=>{lim=40;draw()};$('#cx').onclick=reset;
+ $('#gp').onclick=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{pos={lat:+p.coords.latitude.toFixed(5),lng:+p.coords.longitude.toFixed(5)};$('#pl').textContent='Location captured. Tap Save to keep it.'},()=>{$('#pl').textContent='Could not read your location. Allow location access and try again.'},{enableHighAccuracy:true,timeout:15000}):0;
+ $('#sv').onclick=async()=>{const n=$('#cn').value.trim(),a=$('#ca').value.trim();if(!n||!a){$('#er').textContent='Enter the name and address.';return}
+  const o={name:n,addr:a,code:$('#cc').value.trim(),contact:$('#cp').value.trim(),tasks:$('#ck').value.split('\n').map(x=>x.trim()).filter(Boolean),notes:$('#cm').value.trim(),office:$('#co2').checked,lat:pos?pos.lat:null,lng:pos?pos.lng:null,active:true};
+  if(ed){const id=ed;await DB.upd('customers',id,o);audit('customers',id,'edited',n);await DB.put('places',id,{name:n,active:true});
+   for(const p of (await DB.list('plans',['siteId','==',id])).filter(p=>p.date>=t0))await DB.upd('plans',p.id,{place:n,site:snap(o)});
+   for(const s of sc.filter(s=>s.siteId==id))await DB.upd('schedules',s.id,{place:n})}
+  else{const id=await DB.add('customers',o);await DB.put('places',id,{name:n,active:true})}
+  reset();$('#er').textContent='Saved. Planned shifts for this customer were updated.'};
+ live('customers',r=>{cu=r;draw()});live('schedules',r=>{sc=r;draw()});live('plans',r=>{pn=r;draw()},[['date','>=',t0],['date','<=',addD(t0,13)]]);
+}
+
+// ---- Planning: week planner (draft and publish), requests, repeating schedules ----
+const DN=[['Mon',1],['Tue',2],['Wed',3],['Thu',4],['Fri',5],['Sat',6],['Sun',0]],PRE={w1:[1],w2:[1,4],w3:[1,3,5],w5:[1,2,3,4,5]},
+ FQ={one:'One time',w1:'Once a week',w2:'Twice a week',w3:'3 times a week',w5:'5 times a week',m1:'Once a month',m2:'Twice a month'};
+const ftx=s=>FQ[s.freq]+(s.freq[0]=='w'?' ('+DN.filter(d=>s.days.includes(d[1])).map(d=>d[0]).join(', ')+')':s.freq[0]=='m'?' (day '+s.mdays.join(' and ')+')':'');
+const hitS=(s,k)=>{if(s.freq=='one')return k==s.from;if(k<s.from||(s.until&&k>s.until))return false;const x=new Date(k+'T12:00'),last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();
+ return s.freq[0]=='w'?s.days.includes(x.getDay()):s.mdays.some(m=>Math.min(m,last)==x.getDate())};
+function plan(v){v.innerHTML='<div id="rqc"></div><div id="wkc"></div><div id="rcc"></div>';reqCard(v.querySelector('#rqc'));weekCard(v.querySelector('#wkc'));recCard(v.querySelector('#rcc'))}
+
+const hmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const isOff=p=>!!(p.site&&p.site.office)||/^(toimisto|office)\b/i.test(p.place||'');
+const pcls=p=>p.kind=='meeting'?'g':isOff(p)?'p':'y';
+const overlap=(a,b)=>mins(a.start)<mins(b.end)&&mins(b.start)<mins(a.end);
+function reqCard(v){
+ const $=s=>v.querySelector(s);let A=[],B=[];
+ const decide=async(r,yes)=>{const pid=r.planId;
+  if(yes){const p=await DB.get('plans',pid),toU=r.type=='claim'?{uid:r.uid,name:r.name}:{uid:r.takerUid,name:r.takerName};
+   if(p){const k=(await DB.list('plans',['date','==',p.date])).filter(x=>x.id!=pid&&x.id!=r.swapPlanId&&!x.open&&x.uid==toU.uid&&overlap(x,p));
+    if(k.length&&!confirm(toU.name+' already has '+k[0].start+'-'+k[0].end+' '+k[0].place+' at that time. Approve anyway?'))return}
+   await DB.upd('plans',pid,{...toU,open:false,pub:true});
+   if(r.type=='swap'&&r.swapPlanId)await DB.upd('plans',r.swapPlanId,{uid:r.uid,name:r.name,open:false,pub:true});
+   await DB.upd('shiftreqs',r.id,{status:'approved',by:U.name});audit('shiftreqs',r.id,'approved',r.label||'');
+   if(r.type=='claim')for(const o of A.filter(x=>x.planId==pid&&x.id!=r.id)){await DB.upd('shiftreqs',o.id,{status:'rejected',by:U.name});notify([o.uid],'Open shift','Someone else got the shift '+(r.label||''),'shifts')}
+   notify([toU.uid,r.type=='swap'?r.uid:''],r.type=='claim'?'Shift approved':'Swap approved',r.label||'','clock')}
+  else{await DB.upd('shiftreqs',r.id,{status:'rejected',by:U.name});audit('shiftreqs',r.id,'rejected',r.label||'');notify([r.uid,r.takerUid||''],'Request rejected',r.label||'','shifts')}};
+ const draw=()=>{const L=[...A,...B].sort((a,b)=>a.ts-b.ts);
+  v.innerHTML=L.length?`<div class="card"><h2>Requests to approve</h2>${L.map(r=>`<div style="margin-top:8px"><b>${esc(r.name)}</b> ${r.type=='claim'?'asks for the open shift':r.swapPlanId?'swaps with <b>'+esc(r.takerName||'')+'</b>':'gives a shift to <b>'+esc(r.takerName||'')+'</b>'}<br><small>${esc(r.label||'')}${r.swapPlanId?' for '+esc(r.swapLabel||''):''}</small>
+   <div class="r" style="margin-top:6px"><button class="sm" data-ok="${r.id}">Approve</button><button class="d sm" data-no="${r.id}">Reject</button></div></div>`).join('')}</div>`:'';
+  v.querySelectorAll('[data-ok]').forEach(b=>b.onclick=()=>decide(L.find(x=>x.id==b.dataset.ok),true));
+  v.querySelectorAll('[data-no]').forEach(b=>b.onclick=()=>decide(L.find(x=>x.id==b.dataset.no),false))};
+ live('shiftreqs',r=>{A=r;draw()},['status','==','pending']);live('shiftreqs',r=>{B=r.filter(x=>x.type=='swap');draw()},['status','==','taken']);
+}
+
+// ---- Calendar and planner: day (vertical timeline), week, 2 weeks, 3 weeks, month ----
+function weekCard(v){
+ const $=s=>v.querySelector(s);
+ let multi=false,ms=new Set(),us=[],lv=[],pl=[],cu=[],act=[],view='w',anchor=dk(Date.now()),sel=null,ed=null,unp=null,uns=null,tm=['08:00','16:00'],opt={te:true,he:false,hr:false},fil=null,armed=false;const HH=40;
+ v.innerHTML=`<div class="card"><h2>Calendar and planner</h2>
+ <select id="wv"><option value="d">Day (vertical)</option><option value="w" selected>Week</option><option value="2">2 weeks</option><option value="3">3 weeks</option><option value="m">Month</option></select>
+ <div class="r" style="flex-wrap:nowrap;margin-top:8px"><button class="o" id="wpv">&lt;</button><b id="wl" style="text-align:center;flex:4"></b><button class="o" id="wnx">&gt;</button></div>
+ <div class="r" style="margin-top:8px"><button class="o sm" id="wtw">Today</button><button class="o sm" id="wcp">Copy previous period here</button></div>
+ <div class="r" style="margin-top:8px"><label class="ck"><input type="checkbox" id="oh">Hide empty</label><label class="ck"><input type="checkbox" id="or">Hide reserved</label><label class="ck"><input type="checkbox" id="ot" checked>Show time entries</label><label class="ck"><input type="checkbox" id="om">Select mode</label></div>
+ <details style="margin-top:8px"><summary>Filter employees</summary><div class="r" id="wfe"></div></details>
+ <details style="margin-top:8px" id="wpd"><summary>Publish shifts</summary>
+  <label>What to publish</label><select id="wpr"><option value="d">Today</option><option value="w">This week</option><option value="n">Next week</option><option value="m">This month</option><option value="c">Custom dates</option></select>
+  <div class="r" id="wpcr" hidden><div><label>From</label><input id="wpf" type="date"></div><div><label>To</label><input id="wpt" type="date"></div></div>
+  <div class="m" id="wpc"></div><button id="wpb" style="margin-top:8px">Publish drafts</button></details>
+ <p class="m" id="wcm"></p>
+ <div class="r" style="margin-top:8px;gap:6px"><span class="tag lg y">Planned shift</span><span class="tag lg p">Office</span><span class="tag lg g">Reserved (meeting)</span><span class="tag lg b">Actual time</span></div>
+ <small>Tap a shift to select it, then tap another place to move it (a time in the day view, a cell in the other views). On a computer you can drag. Dashed = draft, hidden from employees until you publish.</small></div>
+ <div class="card" id="wmb" hidden></div><div class="card" id="wact" hidden></div><div class="card sc" id="wgr"></div><div class="card" id="wfm" hidden></div><div class="card"><b>Planned hours in this view</b><div id="wsm"></div></div>`;
+ const fd=d=>new Date(d+'T12:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+ const onLeave=(u,d)=>lv.some(x=>x.uid==u&&x.status=='approved'&&x.from<=d&&x.to>=d);
+ const emps=()=>us.filter(x=>x.active!==false).sort((a,b)=>a.name.localeCompare(b.name));
+ const shown=()=>emps().filter(e=>!fil||fil.has(e.id));
+ const rng=()=>{if(view=='d')return[anchor,anchor];if(view=='m'){const last=new Date(+anchor.slice(0,4),+anchor.slice(5,7),0).getDate();return[anchor.slice(0,8)+'01',anchor.slice(0,8)+String(last).padStart(2,'0')]}
+  const a=mon(anchor);return[a,addD(a,7*{w:1,2:2,3:3}[view]-1)]};
+ const vis=p=>!(opt.hr&&p.kind=='meeting');
+ const clash=(uid,d,st,en,ign)=>pl.find(p=>p.id!=ign&&!p.open&&p.uid==uid&&p.date==d&&overlap(p,{start:st,end:en}));
+ const evAttr=p=>`class="${pcls(p)}${p.pub===false?' dr':''}${sel==p.id||ms.has(p.id)?' sl':''}" draggable="true" data-p="${p.id}"`;
+ const chip=p=>`<div class="chip ${pcls(p)}${p.pub===false?' dr':''}${sel==p.id||ms.has(p.id)?' sl':''}" draggable="true" data-p="${p.id}"><b>${p.start}-${p.end}</b><br>${esc(p.place)}</div>`;
+ const save=async(p,patch)=>{await DB.upd('plans',p.id,patch);const n={...p,...patch};
+  audit('plans',p.id,'edited',p.date+' '+p.start+'-'+p.end+' '+(p.name||'')+' -> '+n.date+' '+n.start+'-'+n.end+' '+(n.name||'')+' '+n.place);
+  if(p.pub!==false){const lbl=n.date+' '+n.start+'-'+n.end+' '+n.place;
+   if(p.uid&&p.uid!=n.uid)notify([p.uid],'Shift removed',p.date+' '+p.start+' '+p.place,'clock');
+   if(n.uid)notify([n.uid],p.uid==n.uid?'Shift changed':'New shift',lbl,'clock')}};
+ const remove=async p=>{await DB.del('plans',p.id);if(p.pub!==false&&p.uid)notify([p.uid],'Shift removed',p.date+' '+p.start+' '+p.place,'clock');sel=null;closeForm()};
+ const move=async(id,uid,d,st)=>{const p=pl.find(x=>x.id==id);if(!p)return;const u=uid?us.find(x=>x.id==uid):null,dur=mins(p.end)-mins(p.start);
+  const ns=st!=null?hmm(st):p.start,ne=st!=null?hmm(Math.min(st+dur,1439)):p.end;
+  if((p.uid||'')==uid&&p.date==d&&ns==p.start){sel=null;draw();return}
+  if(uid&&onLeave(uid,d)&&!confirm(u.name+' has approved leave that day. Move anyway?'))return;
+  const k=uid&&clash(uid,d,ns,ne,p.id);if(k&&!confirm(u.name+' already has '+k.start+'-'+k.end+' '+k.place+' at that time. Move anyway?'))return;
+  sel=null;await save(p,{uid,name:u?u.name:'Open shift',open:!uid,date:d,start:ns,end:ne});draw()};
+ const closeForm=()=>{ed=null;$('#wfm').hidden=true;$('#wfm').innerHTML=''};
+ const openForm=(p,pre)=>{ed=p?p.id:null;const s=p||{uid:pre.uid,date:pre.d,start:pre.start||tm[0],end:pre.end||tm[1],place:pre.place||'',siteId:pre.siteId||'',kind:pre.kind||''},c=cu.find(x=>x.id==s.siteId),f=$('#wfm');f.hidden=false;
+  f.innerHTML=`<h2>${p?'Edit':'New'}</h2><label>Type</label><select id="fk"><option value="">Shift</option><option value="meeting">Reserved time (meeting)</option></select>
+  <label>Employee</label><select id="fe"><option value="">Open shift (anyone can request it)</option>${emps().map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select>
+  <label id="fcl2">Customer or place (or meeting title)</label><input id="fc" list="fcl" autocomplete="off" value="${esc(c?clabel(c):s.place)}"><datalist id="fcl">${cu.filter(x=>x.active!==false).map(x=>`<option value="${esc(clabel(x))}">`).join('')}</datalist>
+  <div class="r"><div><label>Day</label><input id="fd" type="date" value="${s.date}"></div><div><label>Start</label><input id="fs" type="time" value="${s.start}"></div><div><label>End</label><input id="fn" type="time" value="${s.end}"></div></div>
+  <p class="e" id="fr"></p><div class="r"><button id="fv">Save</button>${p?'<button class="o" id="fdp">Duplicate</button><button class="d" id="frm">Remove</button>':''}<button class="o" id="fx">Close</button></div>`;
+  $('#fe').value=s.uid||'';$('#fk').value=s.kind||'';
+  $('#fx').onclick=closeForm;
+  if(p){$('#frm').onclick=()=>confirm('Remove this entry? It stays in Records and can be restored.')&&remove(p);$('#fdp').onclick=()=>openForm(null,{uid:s.uid,d:s.date,place:s.place,siteId:s.siteId,start:s.start,end:s.end,kind:s.kind})}
+  $('#fv').onclick=async()=>{const E=m=>$('#fr').textContent=m,raw=$('#fc').value.trim(),kind=$('#fk').value,c=kind?null:cfind(cu,raw),place=c?c.name:raw,uid=$('#fe').value,u=us.find(x=>x.id==uid),d=$('#fd').value,st=$('#fs').value,en=$('#fn').value;
+   if(!place)return E('Choose a customer or type a place or title.');if(!d||!st||!en||mins(en)<=mins(st))return E('Choose a day, and an end time after the start time.');
+   if(uid&&onLeave(uid,d)&&!confirm(u.name+' has approved leave that day. Save anyway?'))return;
+   const k=uid&&clash(uid,d,st,en,ed);if(k&&!confirm(u.name+' already has '+k.start+'-'+k.end+' '+k.place+' at that time. Save anyway?'))return;
+   const base={place,date:d,start:st,end:en,siteId:c?c.id:'',site:snap(c),uid,name:u?u.name:'Open shift',open:!uid,kind};
+   if(p)await save(p,base);else await DB.add('plans',{...base,pub:false});
+   tm=[st,en];closeForm()}};
+ // ---- grid (week, 2 weeks, 3 weeks, month)
+ const grid=(a,b)=>{const dd=[];for(let d=a;d<=b;d=addD(d,1))dd.push(d);const E=shown(),H=d=>hol(d)?`<br><span class="tag w">${esc(hol(d).n)}</span>`:'';
+  const cell=(uid,d)=>{const L=pl.filter(p=>p.date==d&&vis(p)&&(uid==''?p.open:(p.uid==uid&&!p.open))).sort((x,y)=>x.start.localeCompare(y.start)),lvv=uid&&onLeave(uid,d);
+   return`<td class="gc${lvv?' lv':''}" data-u="${uid}" data-d="${d}">${lvv?'<small class="m">Leave</small>':''}${L.map(chip).join('')}<button class="o sm add" data-u="${uid}" data-d="${d}">+</button></td>`};
+  const empty=uid=>opt.he&&!dd.some(d=>pl.some(p=>p.date==d&&vis(p)&&(uid==''?p.open:p.uid==uid&&!p.open)));
+  $('#wgr').innerHTML=`<table><tr><th>Employee</th>${dd.map(d=>`<th>${fd(d)}${d==dk(Date.now())?' *':''}${H(d)}</th>`).join('')}</tr>
+   ${empty('')?'':`<tr><td><b>Open shifts</b></td>${dd.map(d=>cell('',d)).join('')}</tr>`}${E.filter(e=>!empty(e.id)).map(e=>`<tr><td><b>${esc(e.name)}</b></td>${dd.map(d=>cell(e.id,d)).join('')}</tr>`).join('')}</table>`};
+ // ---- vertical timeline (one day)
+ const timeline=()=>{const d=anchor,dayS=new Date(d+'T00:00').getTime(),dayE=dayS+864e5,old=$('#wgr .tlw'),st=old?old.scrollTop:6*HH;
+  const P=pl.filter(p=>p.date==d&&vis(p)),A=opt.te?act.filter(s=>s.t0<dayE&&(s.t1||Date.now())>dayS):[];
+  let C=[{id:'',name:'Open'},...shown().map(e=>({id:e.id,name:e.name}))];
+  const mine=(c,p)=>c.id?p.uid==c.id&&!p.open:!!p.open;
+  if(opt.he)C=C.filter(c=>P.some(p=>mine(c,p))||(c.id&&A.some(s=>s.uid==c.id)));
+  const lanes=(L,left,wid)=>{L.sort((x,y)=>x.s-y.s);const ends=[];L.forEach(x=>{let i=ends.findIndex(t=>t<=x.s);if(i<0){i=ends.length;ends.push(0)}ends[i]=x.e;x.l=i});const n=Math.max(1,ends.length);L.forEach(x=>{x.left=left+x.l*wid/n;x.w=wid/n});return L};
+  const pw=opt.te?52:100;
+  const col=c=>{const Lp=lanes(P.filter(p=>mine(c,p)).map(p=>({p,s:mins(p.start),e:Math.max(mins(p.end),mins(p.start)+15)})),0,pw),
+    La=lanes(c.id?A.filter(s=>s.uid==c.id).map(s=>({s0:s,s:Math.round((Math.max(s.t0,dayS)-dayS)/6e4),e:Math.max(Math.round((Math.min(s.t1||Date.now(),dayE)-dayS)/6e4),Math.round((Math.max(s.t0,dayS)-dayS)/6e4)+10)})):[],pw,100-pw);
+   return`<div class="col" data-u="${c.id}" data-d="${d}" style="height:${24*HH}px">${Lp.map(x=>`<div class="ev ${pcls(x.p)}${x.p.pub===false?' dr':''}${sel==x.p.id||ms.has(x.p.id)?' sl':''}" draggable="true" data-p="${x.p.id}" title="${esc(x.p.place)}" style="top:${x.s/60*HH}px;height:${Math.max(14,(x.e-x.s)/60*HH)}px;left:${x.left}%;width:${x.w}%">${x.p.start}-${x.p.end} ${esc(x.p.place)}</div>`).join('')}${La.map(x=>`<div class="ev b" title="${esc(x.s0.place||'')}" style="top:${x.s/60*HH}px;height:${Math.max(14,(x.e-x.s)/60*HH)}px;left:${x.left}%;width:${x.w}%">${hm(x.s0.t0)}-${x.s0.t1?hm(x.s0.t1):'now'} ${esc(x.s0.place||'')}</div>`).join('')}</div>`};
+  $('#wgr').innerHTML=`<div class="tlw"><div class="tl" style="grid-template-columns:46px repeat(${C.length},minmax(110px,1fr))"><div class="th"></div>${C.map(c=>`<div class="th">${esc(c.name)}${c.id&&onLeave(c.id,d)?' <span class="tag">leave</span>':''}</div>`).join('')}
+   <div class="ax" style="height:${24*HH}px">${Array.from({length:24},(_,h)=>`<div style="top:${h*HH}px">${String(h).padStart(2,'0')}:00</div>`).join('')}</div>${C.map(col).join('')}</div></div>${hol(d)?`<p class="m">Public holiday: ${esc(hol(d).n)}</p>`:''}`;
+  $('#wgr .tlw').scrollTop=st};
+ const draw=()=>{const[a,b]=rng();if(sel&&!pl.some(p=>p.id==sel))sel=null;
+  $('#wl').textContent=view=='d'?fd(anchor):view=='m'?new Date(anchor+'T12:00').toLocaleDateString('en-GB',{month:'long',year:'numeric'}):fd(a)+' - '+fd(b);
+  $('#wcp').hidden=!['w','2','3'].includes(view);
+  view=='d'?timeline():grid(a,b);
+  if($('#wmc'))$('#wmc').textContent=ms.size+' selected';
+  const p=sel&&pl.find(x=>x.id==sel);$('#wact').hidden=!p;
+  if(p){const cs=cu.find(x=>x.id==p.siteId),si=cs?snap(cs):p.site;$('#wact').innerHTML=`<b>${esc(p.place)}</b>${p.pub===false?' <span class="tag">draft</span>':''}<br>${fd(p.date)}, <b>${p.start}-${p.end}</b>, ${esc(p.name)}${si?siteHTML(si):'<br><small class="m">No customer details saved for this place.</small>'}<br><small>Tap ${view=='d'?'a time in a column':'a cell'} to move it there.</small>
+   <div class="r" style="margin-top:8px"><button class="sm" id="wae">Edit</button><button class="d sm" id="war">Remove</button><button class="o sm" id="wac">Cancel</button></div>`;
+   $('#wae').onclick=()=>{openForm(p);scrollTo(0,0)};$('#war').onclick=()=>confirm('Remove this entry? It stays in Records and can be restored.')&&remove(p).then(draw);$('#wac').onclick=()=>{sel=null;draw()}}
+  const hrs={};pl.filter(p=>p.date>=a&&p.date<=b&&!p.open&&p.kind!='meeting').forEach(p=>hrs[p.name]=(hrs[p.name]||0)+(mins(p.end)-mins(p.start)));
+  $('#wsm').innerHTML=Object.entries(hrs).sort().map(([n,m])=>`<div>${esc(n)}: <b>${fdur(m*6e4)}</b></div>`).join('')||'<p class="m">Nothing planned.</p>'};
+ const fe=()=>{$('#wfe').innerHTML=emps().map(e=>`<label class="ck" style="flex:0 0 46%"><input type="checkbox" class="fe" value="${e.id}" ${!fil||fil.has(e.id)?'checked':''}>${esc(e.name)}</label>`).join('');
+  v.querySelectorAll('.fe').forEach(c=>c.onchange=()=>{const s=new Set([...v.querySelectorAll('.fe')].filter(x=>x.checked).map(x=>x.value));fil=s.size==emps().length?null:s;draw()})};
+ $('#wgr').onclick=e=>{const c=e.target.closest('.chip,.ev[data-p]'),a=e.target.closest('.add'),td=e.target.closest('.gc'),col=e.target.closest('.col');
+  if(c&&multi){const i=c.dataset.p;ms.has(i)?ms.delete(i):ms.add(i);draw();return}
+  if(multi&&(td||col))return;
+  if(c){sel=sel==c.dataset.p?null:c.dataset.p;draw();return}
+  if(e.target.closest('.ev.b'))return;
+  if(a){openForm(null,{uid:a.dataset.u,d:a.dataset.d});return}
+  if(col){const r=col.getBoundingClientRect(),m=Math.max(0,Math.min(1425,Math.round((e.clientY-r.top)/HH*4)*15));
+   if(sel)move(sel,col.dataset.u,col.dataset.d,m);else openForm(null,{uid:col.dataset.u,d:col.dataset.d,start:hmm(m),end:hmm(Math.min(m+240,1439))});return}
+  if(td&&sel)move(sel,td.dataset.u,td.dataset.d)};
+ $('#wgr').ondragstart=e=>{const c=e.target.closest('.chip,.ev[data-p]');if(c){e.dataTransfer.setData('text/plain',c.dataset.p);sel=c.dataset.p}};
+ $('#wgr').ondragover=e=>{if(e.target.closest('.gc,.col'))e.preventDefault()};
+ $('#wgr').ondrop=e=>{const id=e.dataTransfer.getData('text/plain')||sel,td=e.target.closest('.gc'),col=e.target.closest('.col');
+  if(td){e.preventDefault();move(id,td.dataset.u,td.dataset.d)}
+  else if(col){e.preventDefault();const r=col.getBoundingClientRect();move(id,col.dataset.u,col.dataset.d,Math.max(0,Math.min(1425,Math.round((e.clientY-r.top)/HH*4)*15)))}};
+ const sub=()=>{const[a,b]=rng();unp&&unp();uns&&uns();uns=null;act=[];
+  unp=DB.watch('plans',r=>{pl=r;draw()},[['date','>=',addD(a,-7)],['date','<=',addD(b,7)]]);
+  if(view=='d'){const s=new Date(anchor+'T00:00').getTime();uns=DB.watch('shifts',r=>{act=r;draw()},[['t0','>=',s-864e5],['t0','<=',s+864e5]])}};
+ un.push(()=>{unp&&unp();uns&&uns()});const iv=setInterval(()=>view=='d'&&draw(),60000);un.push(()=>clearInterval(iv));
+ const step=k=>{if(view=='d')anchor=addD(anchor,k);else if(view=='m'){const x=new Date(anchor+'T12:00');x.setMonth(x.getMonth()+k,1);anchor=dk(x.getTime())}else anchor=addD(anchor,7*{w:1,2:2,3:3}[view]*k);sel=null;sub();draw()};
+ $('#wpv').onclick=()=>step(-1);$('#wnx').onclick=()=>step(1);$('#wtw').onclick=()=>{anchor=dk(Date.now());sel=null;sub();draw()};
+ $('#wv').onchange=()=>{view=$('#wv').value;sel=null;sub();draw()};
+ $('#oh').onchange=()=>{opt.he=$('#oh').checked;draw()};$('#or').onchange=()=>{opt.hr=$('#or').checked;draw()};$('#ot').onchange=()=>{opt.te=$('#ot').checked;draw()};
+ // ---- select mode: change many entries at once
+ const picked=()=>pl.filter(x=>ms.has(x.id));
+ const bulk=async(label,fn)=>{const L=picked();if(!L.length)return $('#wme').textContent='Select some shifts first.';
+  if(!confirm(label+' for '+L.length+' entr'+(L.length==1?'y':'ies')+'? Nothing is erased. Changes are in the change log.')){$('#wme').textContent='Cancelled. If no question appeared, your browser blocked it.';return}
+  $('#wme').textContent='Working...';try{for(const x of L)await fn(x);$('#wme').textContent='Done: '+L.length+' updated.'}catch(e){$('#wme').textContent=e.message}draw()};
+ $('#om').onchange=()=>{multi=$('#om').checked;ms=new Set();sel=null;const b=$('#wmb');b.hidden=!multi;
+  if(!multi){b.innerHTML='';draw();return}
+  b.innerHTML=`<b>Select mode</b> <span id="wmc" class="tag">0 selected</span><br><small>Tap shifts to select or unselect them. Then choose what to do.</small>
+  <div class="r" style="margin-top:8px"><button class="o sm" id="wma">Select all in this view</button><button class="o sm" id="wmx">Clear</button></div>
+  <label>Give to employee</label><div class="r" style="flex-wrap:nowrap"><select id="wmu"><option value="">Open shift</option>${emps().map(e=>`<option value="${e.id}">${esc(e.name)}</option>`).join('')}</select><button class="sm" id="wmg">Give</button></div>
+  <label>Move by days (negative = earlier)</label><div class="r" style="flex-wrap:nowrap"><input id="wmd" type="number" value="1" step="1"><button class="sm" id="wmm">Move</button></div>
+  <div class="r" style="margin-top:8px"><button class="sm" id="wmp">Publish selected</button><button class="d sm" id="wmr">Remove selected</button></div><p class="m" id="wme"></p>`;
+  $('#wmx').onclick=()=>{ms=new Set();draw()};
+  $('#wma').onclick=()=>{const[a,z]=rng(),ids=new Set(shown().map(e=>e.id));pl.filter(x=>x.date>=a&&x.date<=z&&vis(x)&&(x.open?!fil:ids.has(x.uid))).forEach(x=>ms.add(x.id));draw()};
+  $('#wmg').onclick=()=>{const uid=$('#wmu').value,u=us.find(x=>x.id==uid);bulk('Give to '+(u?u.name:'open shifts'),x=>save(x,{uid,name:u?u.name:'Open shift',open:!uid}))};
+  $('#wmm').onclick=()=>{const n=parseInt($('#wmd').value,10);if(!n)return $('#wme').textContent='Enter a number of days.';bulk('Move by '+n+' day(s)',x=>save(x,{date:addD(x.date,n)}))};
+  $('#wmp').onclick=()=>bulk('Publish',async x=>{if(x.pub===false){await DB.upd('plans',x.id,{pub:true});audit('plans',x.id,'published',x.date+' '+x.start+' '+x.place);if(x.uid)notify([x.uid],'New shift',x.date+' '+x.start+'-'+x.end+' '+x.place,'clock')}});
+  $('#wmr').onclick=()=>bulk('Remove',async x=>{await DB.del('plans',x.id);audit('plans',x.id,'removed',x.date+' '+x.start+'-'+x.end+' '+x.name+' '+x.place);if(x.pub!==false&&x.uid)notify([x.uid],'Shift removed',x.date+' '+x.start+' '+x.place,'clock');ms.delete(x.id)});
+  draw()};
+ // ---- publish with a pre-publish check
+ const prange=()=>{const k=$('#wpr').value,t=dk(Date.now());if(k=='d')return[t,t];if(k=='w')return[mon(t),addD(mon(t),6)];
+  if(k=='n'){const n=addD(mon(t),7);return[n,addD(n,6)]}
+  if(k=='m')return[t.slice(0,8)+'01',t.slice(0,8)+String(new Date(+t.slice(0,4),+t.slice(5,7),0).getDate()).padStart(2,'0')];return[$('#wpf').value,$('#wpt').value]};
+ const drafts=async()=>{const[a,b]=prange();if(!a||!b||b<a)return[];return(await DB.list('plans',[['date','>=',a],['date','<=',b]])).filter(p=>p.pub===false)};
+ const cnt=async()=>{armed=false;$('#wpb').textContent='Publish drafts';$('#wpcr').hidden=$('#wpr').value!='c';const L=await drafts();$('#wpc').textContent=L.length?L.length+' draft entr'+(L.length==1?'y':'ies')+' will be published.':'No drafts in this period.'};
+ const check=async L=>{const[a,b]=prange(),w0=mon(a),w1=addD(mon(b),6),all=(await DB.list('plans',[['date','>=',w0],['date','<=',w1]])).filter(p=>!p.open),W=[],lim=(S.pay&&S.pay.week)||40;
+  const o=L.filter(p=>p.open).length;if(o)W.push(o+' open shift'+(o==1?'':'s')+' still have nobody assigned (employees can request them).');
+  const by={};all.filter(p=>p.uid).forEach(p=>{(by[p.uid+'|'+p.date]=by[p.uid+'|'+p.date]||[]).push(p)});
+  for(const L2 of Object.values(by))for(let i=0;i<L2.length;i++)for(let j=i+1;j<L2.length;j++)if(overlap(L2[i],L2[j])&&(L2[i].pub===false||L2[j].pub===false))W.push(`Double booking: ${L2[0].name} on ${L2[0].date}, ${L2[i].start}-${L2[i].end} overlaps ${L2[j].start}-${L2[j].end}.`);
+  const wh={};all.filter(p=>p.uid&&p.kind!='meeting').forEach(p=>{const k=p.uid+'|'+mon(p.date);wh[k]=wh[k]||{n:p.name,w:mon(p.date),m:0};wh[k].m+=mins(p.end)-mins(p.start)});
+  Object.values(wh).filter(x=>x.m/60>lim).forEach(x=>W.push(`${x.n} has ${(x.m/60).toFixed(1)} h planned in the week of ${x.w} (limit ${lim} h).`));
+  L.filter(p=>p.uid&&hol(p.date)).forEach(p=>W.push(`${p.name} works on ${hol(p.date).n} (${p.date}).`));
+  L.filter(p=>p.uid&&onLeave(p.uid,p.date)).forEach(p=>W.push(`${p.name} is on approved leave on ${p.date} but has a shift.`));
+  return[...new Set(W)]};
+ $('#wpr').onchange=cnt;$('#wpf').onchange=cnt;$('#wpt').onchange=cnt;$('#wpd').ontoggle=cnt;
+ $('#wpb').onclick=async()=>{const L=await drafts();if(!L.length){$('#wpc').textContent='No drafts in this period.';return}
+  if(!armed){const W=await check(L);if(W.length){armed=true;$('#wpb').textContent='Publish anyway';$('#wpc').innerHTML='<b>Check before publishing:</b><ul style="margin:4px 0 0 18px;padding:0">'+W.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';return}}
+  for(const p of L)await DB.upd('plans',p.id,{pub:true});armed=false;$('#wpb').textContent='Publish drafts';
+  const by={};L.filter(p=>p.uid).forEach(p=>by[p.uid]=(by[p.uid]||0)+1);
+  for(const[u,n]of Object.entries(by))notify([u],'New shifts published',n+' entr'+(n==1?'y':'ies')+' added to your schedule','clock');
+  if(L.some(p=>p.open))notify(await allIds(),'Open shifts available','Check the Shifts tab','shifts');
+  $('#wpc').textContent='Published '+L.length+' entr'+(L.length==1?'y':'ies')+'.'};
+ $('#wcp').onclick=async()=>{const[a]=rng(),n=7*{w:1,2:2,3:3}[view],src=await DB.list('plans',[['date','>=',addD(a,-n)],['date','<',a]]);let made=0,skip=0,dup=0;
+  for(const p of src){const d=addD(p.date,n),u=us.find(x=>x.id==p.uid);
+   if(!p.open){if(!u||u.active===false)continue;if(onLeave(p.uid,d)){skip++;continue}}
+   if(pl.some(x=>(x.uid||'')==(p.uid||'')&&x.date==d&&x.start==p.start&&x.place==p.place)){dup++;continue}
+   const c=cu.find(x=>x.id==p.siteId);await DB.add('plans',{uid:p.uid||'',name:p.name,open:!!p.open,kind:p.kind||'',place:c?c.name:p.place,date:d,start:p.start,end:p.end,siteId:p.siteId||'',site:c?snap(c):(p.site||null),pub:false});made++}
+  $('#wcm').textContent=`Copied ${made} entr${made==1?'y':'ies'} as drafts${skip?`, ${skip} skipped (on approved leave)`:''}${dup?`, ${dup} already existed`:''}. Publish them when ready.`};
+ live('users',r=>{us=r;fe();draw()});live('leaves',r=>{lv=r;draw()});live('customers',r=>{cu=r;draw()});sub();
+}
+
+function recCard(v){
+ const $=s=>v.querySelector(s);
+ let us=[],lv=[],sc=[],cu=[],ed=null,ext=false,ld=0;
+ v.innerHTML=`<div class="card"><h2 id="ph">New repeating schedule</h2><label>Customer or place</label><input id="cs" list="csl" autocomplete="off" placeholder="Search customer or type a place"><datalist id="csl"></datalist><label>Employee</label><select id="u"></select>
+ <label>How often</label><select id="fq">${Object.entries(FQ).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select>
+ <div id="wd" class="r" hidden>${DN.map(d=>`<label class="ck" style="flex:0 0 auto"><input type="checkbox" class="wk" value="${d[1]}">${d[0]}</label>`).join('')}</div>
+ <div id="md" class="r" hidden><div><label>Day of month</label><input id="m1" type="number" min="1" max="31" value="1"></div><div id="m2w"><label>Second day</label><input id="m2" type="number" min="1" max="31" value="15"></div></div>
+ <div class="r"><div><label id="dl">Date</label><input id="d" type="date"></div><div><label>Start</label><input id="s" type="time" value="08:00"></div><div><label>End</label><input id="e" type="time" value="16:00"></div></div>
+ <label>Ends on (optional)</label><input id="ut" type="date"><p class="e" id="wn"></p><p id="er" class="m"></p>
+ <div class="r"><button id="go">Create schedule</button><button class="o" id="cn" hidden>Cancel</button></div></div>
+ <div class="card"><b>Repeating schedules</b><small> (shifts are planned 90 days ahead and topped up automatically)</small><input id="rq" placeholder="Search schedules" style="margin-top:8px"><div id="sl"></div></div>`;
+ const onLeave=(u,d)=>lv.some(x=>x.uid==u&&x.status=='approved'&&x.from<=d&&x.to>=d);
+ const warn=()=>{const u=$('#u').value,d=$('#d').value;$('#wn').textContent=u&&d&&onLeave(u,d)?'This employee is on approved leave on that date.':''};
+ const gen=async(s,from)=>{const hz=dk(Date.now()+90*864e5),end=s.freq=='one'?s.from:(s.until&&s.until<hz?s.until:hz),c=cu.find(x=>x.id==s.siteId);let made=0,skip=0;
+  for(let k=from>s.from?from:s.from;k<=end;k=addD(k,1)){if(!hitS(s,k))continue;if(onLeave(s.uid,k)){skip++;continue}
+   await DB.add('plans',{uid:s.uid,name:s.name,place:c?c.name:s.place,date:k,start:s.start,end:s.end,schedId:s.id,siteId:s.siteId||'',site:snap(c),pub:true});made++}
+  await DB.upd('schedules',s.id,{genUntil:end});return[made,skip]};
+ const maybeExt=async()=>{if(ext||(ld&13)!=13)return;ext=true;const lim=dk(Date.now()+30*864e5);
+  for(const s of sc.filter(x=>x.active&&x.freq!='one')){let gu=s.genUntil;
+   if(!gu){const ps=await DB.list('plans',['schedId','==',s.id]);gu=ps.reduce((m,p)=>p.date>m?p.date:m,addD(s.from,-1));await DB.upd('schedules',s.id,{genUntil:gu})}
+   if(gu<lim)await gen({...s,genUntil:gu},addD(gu,1))}};
+ const form=()=>{const f=$('#fq').value;$('#wd').hidden=f[0]!='w';$('#md').hidden=f[0]!='m';$('#m2w').hidden=f!='m2';
+  if(PRE[f])v.querySelectorAll('.wk').forEach(c=>c.checked=PRE[f].includes(+c.value))};
+ const reset=()=>{ed=null;$('#ph').textContent='New repeating schedule';$('#dl').textContent='Date';$('#go').textContent='Create schedule';$('#cn').hidden=true;$('#cs').value='';$('#fq').value='one';$('#ut').value='';form();warn()};
+ const draw=()=>{const sv=$('#u').value,q=$('#rq').value.trim().toLowerCase();$('#u').innerHTML=us.filter(x=>x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('');if(sv)$('#u').value=sv;
+  $('#csl').innerHTML=cu.filter(c=>c.active!==false).map(c=>`<option value="${esc(clabel(c))}">`).join('');warn();
+  $('#sl').innerHTML=sc.filter(x=>x.active&&(!q||(x.place+' '+x.name).toLowerCase().includes(q))).slice(0,60).map(s=>`<hr><b>${esc(s.place)}</b> <small>${esc(s.name)}</small><br>${ftx(s)}, ${s.start}-${s.end}<br><small>${s.freq=='one'?s.from:'from '+s.from}${s.until?' until '+s.until:''}</small>
+   <div class="r" style="margin-top:6px"><button class="o" data-ed="${s.id}">Change</button><button class="d" data-en="${s.id}">End</button></div>`).join('')||'<p class="m">No schedules.</p>';
+  v.querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{const s=sc.find(x=>x.id==b.dataset.ed),c=cu.find(x=>x.id==s.siteId);ed=s.id;$('#ph').textContent='Change schedule';$('#dl').textContent=s.freq=='one'?'Date':'Changes apply from';
+   $('#go').textContent='Save changes';$('#cn').hidden=false;$('#cs').value=c?clabel(c):s.place;$('#u').value=s.uid;$('#fq').value=s.freq;form();
+   v.querySelectorAll('.wk').forEach(c=>c.checked=(s.days||[]).includes(+c.value));$('#m1').value=(s.mdays||[])[0]||1;$('#m2').value=(s.mdays||[])[1]||15;
+   $('#d').value=s.freq=='one'?s.from:dk(Date.now());$('#s').value=s.start;$('#e').value=s.end;$('#ut').value=s.until||'';warn();scrollTo(0,0)});
+  v.querySelectorAll('[data-en]').forEach(b=>b.onclick=async()=>{if(!confirm('End this schedule? Its future shifts will be removed.'))return;
+   for(const p of (await DB.list('plans',['schedId','==',b.dataset.en])).filter(p=>p.date>=dk(Date.now())))await DB.del('plans',p.id);await DB.upd('schedules',b.dataset.en,{active:false})})};
+ live('users',r=>{us=r;draw()});live('leaves',r=>{lv=r;ld|=4;warn();maybeExt()});live('schedules',r=>{sc=r;ld|=1;draw();maybeExt()});live('customers',r=>{cu=r;ld|=8;draw();maybeExt()});
+ $('#rq').oninput=draw;$('#fq').onchange=form;$('#u').onchange=warn;$('#d').onchange=warn;$('#cn').onclick=reset;form();
+ $('#go').onclick=async()=>{const E=(m,bad=1)=>{$('#er').className=bad?'e':'m';$('#er').textContent=m};
+  const raw=$('#cs').value.trim(),c=cfind(cu,raw),place=c?c.name:raw,u=us.find(x=>x.id==$('#u').value),fq=$('#fq').value,d=$('#d').value,st=$('#s').value,en=$('#e').value,ut=$('#ut').value;
+  const days=DN.filter(x=>[...v.querySelectorAll('.wk')].some(k=>k.checked&&+k.value==x[1])).map(x=>x[1]);
+  const mdays=fq[0]=='m'?[...new Set([+$('#m1').value,...(fq=='m2'?[+$('#m2').value]:[])])].filter(n=>n>=1&&n<=31):[];
+  const need={w1:1,w2:2,w3:3,w5:5}[fq];
+  if(!place||!u||!d||!st||!en||mins(en)<=mins(st))return E('Fill in customer or place, employee, date and an end time after the start.');
+  if(need&&days.length!=need)return E(`Pick exactly ${need} day${need>1?'s':''} of the week.`);
+  if(fq[0]=='m'&&mdays.length!=(fq=='m2'?2:1))return E('Choose '+(fq=='m2'?'two different days':'a day')+' of the month.');
+  if(ut&&ut<d)return E('The end date is before the start date.');
+  const f={uid:u.id,name:u.name,place,siteId:c?c.id:'',freq:fq,days:fq[0]=='w'?days:[],mdays,start:st,end:en,from:d,until:ut,active:true};let r;
+  if(ed){for(const p of (await DB.list('plans',['schedId','==',ed])).filter(p=>p.date>=d))await DB.del('plans',p.id);await DB.upd('schedules',ed,{...f,genUntil:''});r=await gen({...f,id:ed},d)}
+  else{const id=await DB.add('schedules',f);r=await gen({...f,id},d)}
+  reset();E(`Done: ${r[0]} shift${r[0]==1?'':'s'} created${r[1]?`, ${r[1]} skipped (employee on approved leave)`:''}.`,0)};
+}
+
+function leave(v){
+ v.innerHTML=`<div class="card"><h2>Request leave</h2><label>Type</label><select id="lt"><option value="p">Leave period (several days)</option><option value="1">One day leave</option></select><div class="r"><div><label id="lfl">From</label><input id="f" type="date"></div><div id="tw"><label>To</label><input id="t" type="date"></div></div>
+ <label>Reason</label><input id="rs"><p class="e" id="er"></p><button id="go">Send request</button></div>
+ <div class="card"><h2>Leave calendar</h2><div class="r" style="flex-wrap:nowrap"><button class="o" id="lp">&lt;</button><b id="lm" style="text-align:center;flex:4"></b><button class="o" id="ln">&gt;</button></div><small>Solid = approved. Dashed = waiting for approval.</small><div id="lc" style="margin-top:8px"></div></div>
+ <div class="card"><b>${staff()?'All requests':'My requests'}</b><div id="l"></div></div>`;
+ let LV=[],cm=dk(Date.now()).slice(0,8)+'01';
+ const one=()=>{$('#tw').hidden=$('#lt').value=='1';$('#lfl').textContent=$('#lt').value=='1'?'Day':'From'};$('#lt').onchange=one;one();
+ const cal=()=>{const d0=new Date(cm+'T12:00'),a=mon(cm),last=new Date(d0.getFullYear(),d0.getMonth()+1,0).getDate(),e=addD(cm,last-1),b=addD(mon(e),6),t=dk(Date.now());
+  $('#lm').textContent=d0.toLocaleDateString('en-GB',{month:'long',year:'numeric'});let h=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="h">${x}</div>`).join('');
+  for(let d=a;d<=b;d=addD(d,1)){const out=d.slice(0,7)!=cm.slice(0,7),L=LV.filter(x=>x.status!='rejected'&&x.from<=d&&x.to>=d),H=hol(d);
+   h+=`<div class="${d==t?'td ':''}${H?'ho':''}" style="${out?'opacity:.35':''}">${+d.slice(8)}${H?`<span class="lt" title="${esc(H.n)}">${esc(H.n)}</span>`:''}${L.map(x=>`<span class="lt${x.status=='pending'?' pn':''}" title="${esc(x.name)}: ${esc(x.reason)}">${esc(x.name.split(' ')[0])}</span>`).join('')}</div>`}
+  $('#lc').innerHTML=`<div class="lcal">${h}</div>`};
+ $('#lp').onclick=()=>{cm=addD(cm,-1).slice(0,8)+'01';cal()};$('#ln').onclick=()=>{cm=addD(cm,32).slice(0,8)+'01';cal()};
+ $('#go').onclick=async()=>{const f=$('#f').value,t=$('#lt').value=='1'?f:$('#t').value,rs=$('#rs').value.trim();if(!f||!t||t<f||!rs){$('#er').textContent='Choose valid dates and write a reason.';return}
+  await DB.add('leaves',{uid:U.id,name:U.name,from:f,to:t,reason:rs,oneDay:f==t,status:'pending'});$('#er').textContent='';$('#rs').value=''};
+ live('leaves',r=>{LV=r;cal();$('#l').innerHTML=r.map(x=>`<hr><b>${esc(x.name)}</b> <span class="tag">${x.status}</span>${x.from==x.to?' <span class="tag">one day</span>':''}<br>${x.from==x.to?x.from:x.from+' to '+x.to}<br><small>${esc(x.reason)}</small>
+  ${staff()&&x.status=='pending'?`<div class="r" style="margin-top:6px"><button data-a="approved" data-id="${x.id}">Approve</button><button class="d" data-a="rejected" data-id="${x.id}">Reject</button></div>`:''}`).join('')||'<p class="m">No requests.</p>';
+  $('#l').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>DB.upd('leaves',b.dataset.id,{status:b.dataset.a,by:U.name}))},mine());
+}
+
+
+// ---- Shifts: open shifts, swaps, my requests ----
+function shiftsTab(v){
+ let mineP=[],openP=[],reqs=[],offers=[];const t=dk(Date.now());
+ v.innerHTML=`<div class="card"><h2>My upcoming shifts</h2><div id="mp"></div></div>
+ <div class="card"><h2>Open shifts</h2><small>Ask for a shift. A supervisor approves it.</small><div id="op"></div></div>
+ <div class="card"><h2>Shifts offered by colleagues</h2><small>Take a shift, or offer one of your own in return. A supervisor approves the change.</small><div id="sw"></div></div>
+ <div class="card"><h2>My requests</h2><div id="rq"></div></div>`;
+ const lbl=p=>p.date+' '+p.start+'-'+p.end+' '+p.place,by=(a,b)=>(a.date+a.start).localeCompare(b.date+b.start);
+ const draw=()=>{const M=mineP.filter(p=>p.pub!==false&&p.date>=t&&p.kind!='meeting').sort(by).slice(0,20);
+  $('#mp').innerHTML=M.map(p=>{const r=reqs.find(x=>x.planId==p.id&&x.type=='swap'&&['open','taken'].includes(x.status));
+   return`<hr><b>${p.date}</b> ${p.start}-${p.end}, ${esc(p.place)} ${r?`<span class="tag">${r.status=='taken'?'waiting for approval':'offered to colleagues'}</span> <button class="o sm" data-cn="${r.id}">Cancel</button>`:`<button class="o sm" data-of="${p.id}">Swap or give away</button>`}`}).join('')||'<p class="m">Nothing planned.</p>';
+  $('#op').innerHTML=openP.filter(p=>p.pub!==false&&p.date>=t).sort(by).map(p=>{const r=reqs.find(x=>x.planId==p.id&&x.type=='claim'&&x.status=='pending');
+   return`<hr>${esc(lbl(p))} ${r?`<span class="tag">requested</span> <button class="o sm" data-cn="${r.id}">Cancel</button>`:`<button class="sm" data-cl="${p.id}">Request</button>`}`}).join('')||'<p class="m">No open shifts.</p>';
+  $('#sw').innerHTML=offers.filter(r=>r.uid!=U.id).map(r=>`<hr><b>${esc(r.name)}</b>: ${esc(r.label)}<div class="r" style="margin-top:6px"><button class="sm" data-tk="${r.id}">I can take it</button>
+   ${M.length?`<select data-sel="${r.id}">${M.map(p=>`<option value="${p.id}">${esc(lbl(p))}</option>`).join('')}</select><button class="o sm" data-ts="${r.id}">Swap with my shift</button>`:''}</div>`).join('')||'<p class="m">None.</p>';
+  $('#rq').innerHTML=[...reqs].sort((a,b)=>b.ts-a.ts).slice(0,15).map(r=>`<hr>${esc(r.label)} <span class="tag">${r.type=='claim'?'request':'swap'}: ${r.status}</span>`).join('')||'<p class="m">None.</p>';
+  v.querySelectorAll('[data-of]').forEach(b=>b.onclick=async()=>{const p=mineP.find(x=>x.id==b.dataset.of);
+   await DB.add('shiftreqs',{type:'swap',planId:p.id,uid:U.id,name:U.name,label:lbl(p),status:'open'});notify(await allIds(),'Shift offered',U.name+': '+lbl(p),'shifts')});
+  v.querySelectorAll('[data-cl]').forEach(b=>b.onclick=async()=>{const p=openP.find(x=>x.id==b.dataset.cl);
+   await DB.add('shiftreqs',{type:'claim',planId:p.id,uid:U.id,name:U.name,label:lbl(p),status:'pending'});notify(await staffIds(),'Open shift requested',U.name+': '+lbl(p),'plan')});
+  v.querySelectorAll('[data-cn]').forEach(b=>b.onclick=()=>DB.del('shiftreqs',b.dataset.cn));
+  v.querySelectorAll('[data-tk]').forEach(b=>b.onclick=async()=>{const r=offers.find(x=>x.id==b.dataset.tk);
+   await DB.upd('shiftreqs',r.id,{status:'taken',takerUid:U.id,takerName:U.name});notify([...await staffIds(),r.uid],'Swap waiting for approval',U.name+' takes: '+r.label,'plan')});
+  v.querySelectorAll('[data-ts]').forEach(b=>b.onclick=async()=>{const r=offers.find(x=>x.id==b.dataset.ts),p=mineP.find(x=>x.id==v.querySelector(`[data-sel="${r.id}"]`).value);
+   await DB.upd('shiftreqs',r.id,{status:'taken',takerUid:U.id,takerName:U.name,swapPlanId:p.id,swapLabel:lbl(p)});notify([...await staffIds(),r.uid],'Swap waiting for approval',U.name+' swaps '+lbl(p)+' for '+r.label,'plan')})};
+ live('plans',r=>{mineP=r;draw()},['uid','==',U.id]);live('plans',r=>{openP=r;draw()},['open','==',true]);
+ live('shiftreqs',r=>{reqs=r;draw()},['uid','==',U.id]);live('shiftreqs',r=>{offers=r;draw()},[['type','==','swap'],['status','==','open']]);
+}
+
+// ---- Records: nothing is ever deleted. Removed entries are hidden, kept, and can be restored. ----
+function wrapDB(R){const vis=a=>a.filter(x=>!x.deleted),W={...R};
+ W.watch=(c,f,flt,all)=>R.watch(c,r=>f(all?r:vis(r)),flt);
+ W.list=async(c,f,all)=>{const r=await R.list(c,f);return all?r:vis(r)};
+ W.del=async(c,id)=>{await R.upd(c,id,{deleted:true,deletedAt:Date.now(),deletedBy:U?U.id:'',deletedByName:U?U.name:''});audit(c,id,'removed','')};
+ W.purge=R.del; // only for notifications and push tokens, which are not records
+ return W}
+function audit(col,id,action,summary){if(!U)return;DB.add('audit',{col,id,action,summary:String(summary||'').slice(0,300),by:U.id,byName:U.name},1).catch(()=>{})}
+const dlFile=(blob,name)=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()};
+const RECT={plans:p=>`${p.date} ${p.start}-${p.end} ${p.place} (${p.name})`,items:x=>`${x.date||''} ${x.item} x${x.qty} (${x.name})`,invoices:i=>`${i.no} ${i.customer.name}`,rtpl:x=>x.name,shiftreqs:r=>r.label};
+const BKCOLS=['customers','places','schedules','plans','shifts','leaves','items','invoices','shiftreqs','msgs','enquiries','audit','rtpl','consents','users'];
+function records(v){
+ v.innerHTML=`<div class="card"><h2>Removed entries</h2><small>Nothing is ever deleted. Removed entries are hidden in the app but kept here, and you can restore them.</small><div id="rm"></div></div>
+ <div class="card"><h2>Change log</h2><small>Who changed or removed what, and when.</small><select id="ad" style="margin-top:8px"><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="365">Last year</option></select><div id="al"></div></div>
+ <div class="card"><h2>Backup</h2><small>Downloads every record, including removed ones. Do it once a month and keep the file somewhere safe: it contains personal data.</small>
+ <div class="r" style="margin-top:8px"><button id="bj">Download full backup (JSON)</button><button class="o" id="bc">Download shifts (CSV)</button></div><p class="m" id="bm"></p></div>`;
+ const load=async()=>{let h='';for(const c of Object.keys(RECT)){let L=[];try{L=await DB.list(c,['deleted','==',true],true)}catch(e){}L.sort((a,b)=>(b.deletedAt||0)-(a.deletedAt||0));
+   h+=L.map(x=>`<hr><span class="tag">${c}</span> ${esc(RECT[c](x))}<br><small>removed ${fdt(x.deletedAt||0)} by ${esc(x.deletedByName||'')}</small> <button class="o sm" data-rs="${c}|${x.id}">Restore</button>`).join('')}
+  $('#rm').innerHTML=h||'<p class="m">No removed entries.</p>';
+  v.querySelectorAll('[data-rs]').forEach(b=>b.onclick=async()=>{const[c,id]=b.dataset.rs.split('|');await DB.upd(c,id,{deleted:false});audit(c,id,'restored','');load()})};
+ const log=async()=>{const L=(await DB.list('audit',['ts','>=',Date.now()-(+$('#ad').value)*864e5],true)).sort((a,b)=>b.ts-a.ts).slice(0,200);
+  $('#al').innerHTML=L.map(x=>`<hr><small>${fdt(x.ts)} | ${esc(x.byName||'')}</small><br><span class="tag">${esc(x.col)}</span> ${esc(x.action)} ${esc(x.summary||'')}`).join('')||'<p class="m">Nothing logged.</p>'};
+ $('#ad').onchange=log;
+ $('#bj').onclick=async()=>{$('#bm').textContent='Collecting...';const o={exported:new Date().toISOString(),by:U.email};
+  for(const c of BKCOLS){try{let L=await DB.list(c,null,true);if(c=='users')L=L.map(({pw,...x})=>x);o[c]=L}catch(e){o[c]='not available: '+e.message}}
+  try{o.company=await DB.getD('private','biz')}catch(e){}
+  dlFile(new Blob([JSON.stringify(o,null,1)],{type:'application/json'}),'cleancrew-backup-'+dk(Date.now())+'.json');
+  $('#bm').textContent='Downloaded. Shifts: '+(o.shifts||[]).length+', plans: '+(o.plans||[]).length+', invoices: '+(o.invoices||[]).length+'.'};
+ $('#bc').onclick=async()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"',L=(await DB.list('shifts',null,true)).sort((a,b)=>a.t0-b.t0),
+  rows=[['Employee','Start','End','Hours','Place','Note','Planned','Edited','Removed','In lat','In lng','Out lat','Out lng'],...L.map(s=>[s.name,new Date(s.t0).toISOString(),s.t1?new Date(s.t1).toISOString():'',s.t1?((s.t1-s.t0)/36e5).toFixed(2):'',s.place||'',s.note||'',s.unplanned?'no':'yes',s.edited?'yes':'',s.deleted?'yes':'',(s.inLoc||{}).lat||'',(s.inLoc||{}).lng||'',(s.outLoc||{}).lat||'',(s.outLoc||{}).lng||''])];
+  dlFile(new Blob(['﻿'+rows.map(r=>r.map(q).join(',')).join('\r\n')],{type:'text/csv'}),'cleancrew-shifts-'+dk(Date.now())+'.csv')};
+ load();log();
+}
+
+// ---- Location consent (shown once after login) ----
+const CONSENT_V=1;
+function consentView(v){
+ v.innerHTML=`<div class="card"><h2>Location and work-time records</h2>
+ <p>While you are clocked in, CleanCrew saves your location when you clock in and out and about every 5 minutes, and shows it to your supervisors and the owner. It is used to check working hours and for safety. Your location is not recorded when you are clocked out. Work-time records are kept as the employer's records. You can withdraw your consent by telling your employer.</p>
+ <p>Kun olet kirjautunut sisään, CleanCrew tallentaa sijaintisi sisään- ja uloskirjautuessasi sekä noin 5 minuutin välein ja näyttää sen esimiehille ja omistajalle. Tietoja käytetään työajan seurantaan ja turvallisuuteen. Sijaintiasi ei tallenneta, kun olet kirjautunut ulos. Työaikatiedot säilytetään työnantajan kirjanpitoa varten. Voit peruuttaa suostumuksesi ilmoittamalla siitä työnantajalle.</p>
+ <label class="ck"><input type="checkbox" id="cok">I agree / Hyväksyn</label><p class="e" id="er"></p>
+ <div class="r"><button id="cgo">Continue</button><button class="o" id="clo">Log out</button></div></div>`;
+ $('#cgo').onclick=async()=>{if(!$('#cok').checked){$('#er').textContent='Tick the box to continue.';return}
+  try{await DB.add('consents',{uid:U.id,name:U.name,version:CONSENT_V});consent=true;render()}catch(e){$('#er').textContent=e.message}};
+ $('#clo').onclick=()=>{stopTrack();DB.logout().then(()=>{U=null;tab='quote';render()})};
+}
+
+// ---- Inbox and phone notifications ----
+function inboxTab(v){
+ v.innerHTML=`<div class="card"><h2>Phone notifications</h2><p class="m" id="pm"></p><button id="pn">Turn on notifications on this phone</button></div>
+ <div class="card"><div class="r"><b>Inbox</b><button class="o sm" id="cl">Clear all</button></div><div id="il"></div></div>`;
+ $('#pm').textContent=('Notification' in window&&Notification.permission=='granted')?'Permission is granted on this phone. Press the button once after each login to make sure this phone is registered.':'New shifts, changes and messages can reach your phone even when the app is closed.';
+ const draw=()=>{$('#il').innerHTML=inbox.map(x=>`<hr><b>${esc(x.title)}</b> <small>${fdt(x.ts)}</small><br>${esc(x.body)}${x.tab?` <button class="o sm" data-go="${x.tab}">Open</button>`:''}`).join('')||'<p class="m">No notifications.</p>';
+  v.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()})};
+ live('notifs',r=>{inbox=r;draw();bell()},['to','==',U.id]);
+ $('#cl').onclick=()=>inbox.forEach(x=>DB.purge('notifs',x.id));
+ $('#pn').onclick=async()=>{try{
+  if(!VAPID_KEY)throw Error('Phone notifications are not configured yet. See SETUP.md section 3d.');
+  if(!('Notification' in window))throw Error('This browser cannot show notifications. On iPhone, add the app to the Home Screen first.');
+  if(await Notification.requestPermission()!='granted')throw Error('Notifications are blocked. Allow them in the browser or phone settings.');
+  await DB.pushOn(VAPID_KEY);$('#pm').textContent='Notifications are on for this phone.'}catch(e){$('#pm').textContent=e.message}};
+}
+
+// ---- Messages with translation ----
+const LANGS={en:'English',fi:'Suomi',sv:'Svenska',et:'Eesti',ru:'Русский',uk:'Українська',hi:'हिन्दी',gu:'ગુજરાતી',ne:'नेपाली',ar:'العربية',es:'Español',pl:'Polski',so:'Soomaali',vi:'Tiếng Việt',tl:'Filipino',tr:'Türkçe'};
+async function translate(text,to){
+ try{if('Translator' in self){let src='en';
+   if('LanguageDetector' in self){const d=await LanguageDetector.create(),r=await d.detect(text);src=(r[0]&&r[0].detectedLanguage)||'en'}
+   if(src==to)return text;
+   if((await Translator.availability({sourceLanguage:src,targetLanguage:to}))!='unavailable')return await(await Translator.create({sourceLanguage:src,targetLanguage:to})).translate(text)}}catch(e){}
+ const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=Autodetect|'+to),j=await r.json(),t=j.responseData&&j.responseData.translatedText;
+ if(!t||/MYMEMORY WARNING|INVALID/i.test(t))throw Error('The translation service is busy or unavailable.');return t}
+function msgs(v){
+ let us=[],ms=[],en=[],to='all',lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
+ if(!LANGS[lang])lang='en';const tr={};
+ v.innerHTML=`<div class="card"><label>Chat with</label><select id="to"></select>
+  <div class="r"><div><label>Translate into</label><select id="lg">${Object.entries(LANGS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
+  <label class="ck" style="flex:1.2;margin-top:24px"><input type="checkbox" id="au">Translate automatically</label></div>
+  <small>Uses your browser's on-device translator when it has one. Otherwise the message text is sent to a free online translation service.</small></div><div class="card" id="bx"></div>`;
+ $('#lg').value=lang;$('#au').checked=auto;
+ const send=async()=>{const t=$('#tx').value.trim();if(!t)return;$('#tx').value='';
+  await DB.add('msgs',{uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t});notify(to=='all'?us.map(x=>x.id):[to],'Message from '+U.name,t.slice(0,80),'msg')};
+ const key=x=>x.id+'|'+lang;
+ const doTr=x=>{const k=key(x);if(tr[k])return;tr[k]={w:1};draw();
+  translate(x.text,lang).then(t=>{tr[k]={t}},e=>{tr[k]={err:e.message}}).then(draw)};
+ const box=()=>{$('#bx').innerHTML=(to=='cust'?'':'<div class="r"><input id="tx" placeholder="Write a message" style="flex:3"><button id="go">Send</button></div>')+'<div id="ml"></div>';
+  if(to!='cust'){$('#go').onclick=send;$('#tx').onkeydown=e=>e.key=='Enter'&&send()}draw()};
+ const draw=()=>{if(!$('#ml'))return;
+  if(to=='cust'){$('#ml').innerHTML=en.map(x=>{const c=x.contact,l=c.includes('@')?'mailto:'+c:'https://wa.me/'+c.replace(/\D/g,'');
+   return`<hr><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small> ${x.done?'<span class="tag">done</span>':''}<br>${esc(x.text)}<br><small>${esc(c)}</small>
+   <div class="r" style="margin-top:6px"><a href="${l}" target="_blank" rel="noopener"><button class="o" style="width:100%">Reply</button></a>${x.done?'':`<button data-id="${x.id}">Mark done</button>`}</div>`}).join('')||'<p class="m">No customer messages.</p>';
+   $('#ml').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>DB.upd('enquiries',b.dataset.id,{done:true}));return}
+  const vis=ms.filter(x=>to=='all'?x.to=='all':x.to!='all'&&((x.uid==U.id&&x.to==to)||(x.uid==to&&x.to==U.id))).slice(0,40);
+  $('#ml').innerHTML=vis.map(x=>{const t=tr[key(x)],me=x.uid==U.id;
+   return`<div class="msg ${me?'me':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small><br>${esc(x.text)}
+   ${t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`}</div>`}).join('')||'<p class="m">No messages yet.</p>';
+  $('#ml').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(vis.find(x=>x.id==b.dataset.tr)));
+  if(auto)vis.filter(x=>x.uid!=U.id&&!tr[key(x)]).slice(0,12).forEach(doTr)};
+ const sel=()=>{$('#to').innerHTML='<option value="all">Whole team</option>'+us.filter(x=>x.id!=U.id&&x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')+(staff()?'<option value="cust">Customer messages</option>':'');$('#to').value=to};
+ $('#to').onchange=()=>{to=$('#to').value;box()};
+ $('#lg').onchange=()=>{lang=$('#lg').value;localStorage.setItem('cc_lang',lang);draw()};
+ $('#au').onchange=()=>{auto=$('#au').checked;localStorage.setItem('cc_auto',auto?'1':'0');draw()};
+ live('users',r=>{us=r;sel()});live('msgs',r=>{ms=r;draw()},['members','array-contains-any',['all',U.id]]);
+ if(staff())live('enquiries',r=>{en=r;draw()});
+ sel();box();
+}
+
+function items(v){
+ let ed=null,rows=[];const td=dk(Date.now());
+ v.innerHTML=`<div class="card"><h2 id="ht">Item taken from the office</h2><label>Product</label><input id="pn" list="dl" autocomplete="off"><datalist id="dl">${S.catalog.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+ <div class="r"><div><label>Quantity</label><input id="q" type="number" min="1" value="1"></div><div><label>Date</label><input id="d" type="date" value="${td}"></div></div>
+ <p class="e" id="er"></p><div class="r"><button id="go">Save</button><button class="o" id="cn" hidden>Cancel</button></div></div>
+ <div class="card"><b>${staff()?'All entries':'My entries'}</b><div id="l"></div></div>`;
+ const reset=()=>{ed=null;$('#pn').value='';$('#q').value=1;$('#d').value=td;$('#go').textContent='Save';$('#cn').hidden=true;$('#ht').textContent='Item taken from the office'};
+ const draw=()=>{let d='';const L=[...rows].sort((a,b)=>(b.date||dk(b.ts)).localeCompare(a.date||dk(a.ts)));
+  $('#l').innerHTML=L.map(x=>{const k=x.date||dk(x.ts),h=k!=d?`<hr><b>${k}</b>`:'';d=k;
+   return`${h}<div>${staff()?`<b>${esc(x.name)}</b>: `:''}${esc(x.item)} x${x.qty}${x.edited?' <span class="tag">edited</span>':''}
+   ${staff()||x.uid==U.id?`<button class="o sm" data-e="${x.id}">Edit</button> <button class="d sm" data-x="${x.id}">Delete</button>`:''}</div>`}).join('')||'<p class="m">No entries.</p>';
+  $('#l').querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{const x=rows.find(y=>y.id==b.dataset.e);ed=x.id;$('#pn').value=x.item;$('#q').value=x.qty;
+   $('#d').value=x.date||dk(x.ts);$('#go').textContent='Save changes';$('#cn').hidden=false;$('#ht').textContent='Edit entry';scrollTo(0,0)});
+  $('#l').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>confirm('Remove this entry? It stays in Records.')&&DB.del('items',b.dataset.x))};
+ $('#cn').onclick=reset;
+ $('#go').onclick=async()=>{const n=$('#pn').value.trim(),q=+$('#q').value,d=$('#d').value;
+  if(!n||!(q>0)||!d){$('#er').textContent='Fill in product, quantity and date.';return}
+  if(d>td){$('#er').textContent='The date cannot be in the future.';return}
+  if(ed){const o=rows.find(y=>y.id==ed);audit('items',ed,'edited',(o?o.item+' x'+o.qty+' '+(o.date||''):'')+' -> '+n+' x'+q+' '+d);await DB.upd('items',ed,{item:n,qty:q,date:d,edited:true})}else await DB.add('items',{uid:U.id,name:U.name,item:n,qty:q,date:d});
+  reset();$('#er').textContent='Saved.'};
+ live('items',r=>{rows=r;draw()},mine());
+}
+
+function team(v){
+ let us=[],sh=[],cs={};const own=U.role=='owner';
+ v.innerHTML=`${own?`<div class="card"><h2>Add employee</h2><label>Name</label><input id="an"><label>Email (Gmail or Outlook)</label><input id="ae" type="email"><label>Phone</label><input id="ap" type="tel">
+ <label>Role</label><select id="ar"><option>employee</option><option>supervisor</option></select><p class="e" id="er"></p><button id="ad">Create login</button><div id="cr"></div></div>`:''}
+ <div class="card"><h2>Team</h2><div id="l"></div></div>${own?'<div class="card"><b>Former employees</b><div id="fm"></div></div>':''}`;
+ const draw=()=>{const m=dk(Date.now()).slice(0,7),act=us.filter(x=>x.active!==false);
+  $('#l').innerHTML=act.map(x=>{const h=sh.filter(s=>s.uid==x.id&&dk(s.t0).startsWith(m)).reduce((a,s)=>a+((s.t1||Date.now())-s.t0),0);
+   return`<hr><b>${esc(x.name)}</b> ${own&&x.id!=U.id?`<select data-id="${x.id}">${['employee','supervisor','owner'].map(o=>`<option ${o==x.role?'selected':''}>${o}</option>`).join('')}</select>`:`<span class="tag">${x.role}</span>`}
+   <br><small>${esc(x.phone||'no phone')}${own?' | '+esc(x.email)+' | joined '+dk(x.ts):''}<br>Location consent: ${cs[x.id]?'given '+fdt(cs[x.id]):'<span class="e">not given yet</span>'}<br>Hours this month: ${fdur(h)}</small>
+   ${own&&x.id!=U.id?`<div class="r" style="margin-top:6px"><button class="o" data-rs="${esc(x.email)}">Reset password</button><button class="d" data-rm="${x.id}" data-nm="${esc(x.name)}">Remove</button></div>`:''}`}).join('');
+  if(own)$('#fm').innerHTML=us.filter(x=>x.active===false).map(x=>`<hr>${esc(x.name)} <small>${esc(x.email)}</small> <button class="o sm" data-rt="${x.id}">Restore</button>`).join('')||'<p class="m">None.</p>';
+  v.querySelectorAll('select[data-id]').forEach(s=>s.onchange=()=>DB.upd('users',s.dataset.id,{role:s.value}));
+  v.querySelectorAll('[data-rs]').forEach(b=>b.onclick=()=>DB.reset(b.dataset.rs).then(()=>alert('Password reset email sent to '+b.dataset.rs),e=>alert(e.message)));
+  v.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>confirm('Remove '+b.dataset.nm+'? They lose access immediately. Their history stays.')&&DB.upd('users',b.dataset.rm,{active:false}));
+  v.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>DB.upd('users',b.dataset.rt,{active:true}))};
+ if(own)$('#ad').onclick=async()=>{const n=$('#an').value.trim(),e=$('#ae').value.trim().toLowerCase();$('#cr').innerHTML='';
+  if(!n||!e.includes('@')){$('#er').textContent='Enter a name and a valid email.';return}
+  try{const pw=await DB.addUser(n,e,$('#ap').value.trim(),$('#ar').value);$('#er').textContent='';
+   $('#cr').innerHTML=`<hr><b>Login created</b><br>Email: ${esc(e)}<br>Password: <b>${esc(pw)}</b><br><small>Copy these and send them to the employee. The password is shown only once. They can set their own with Forgot password on the login page.</small>`;
+   $('#an').value=$('#ae').value=$('#ap').value=''}catch(x){$('#er').textContent=x.message}};
+ live('consents',r=>{cs={};r.forEach(x=>cs[x.uid]=x.ts);draw()});live('users',r=>{us=r;draw()});live('shifts',r=>{sh=r;draw()},['t0','>=',new Date(new Date().getFullYear(),new Date().getMonth(),1).getTime()]);
+}
+
+// ---- Report builder ----
+function paycalc(sh,P){const E={},inW=(h,s,e)=>s<e?h>=s&&h<e:h>=s||h<e;
+ sh.forEach(s=>{const o=E[s.uid]=E[s.uid]||{emp:s.name,n:0,eve:0,night:0,sat:0,sun:0,hol:0,tot:0,day:{}};o.n++;let lastD=-1,k='',hf=false;
+  for(let t=s.t0,end=Math.min(s.t1,s.t0+48*36e5);t<end;t+=6e4){const d=new Date(t);if(d.getDate()!==lastD){lastD=d.getDate();k=dk(t);const hh=hol(k);hf=!!hh&&(!hh.eve||P.eves!==false)}
+   const h=d.getHours();o.day[k]=(o.day[k]||0)+1;o.tot++;if(inW(h,P.eveS,P.eveE))o.eve++;if(inW(h,P.nightS,P.nightE))o.night++;if(hf)o.hol++;if(d.getDay()==6)o.sat++;if(d.getDay()==0)o.sun++}});
+ return Object.values(E).map(o=>{const H=m=>m/60,wk={};
+  for(const[k,m]of Object.entries(o.day)){const h=H(m),w=mon(k),x=wk[w]=wk[w]||{t:0,d:0};x.t+=h;x.d+=Math.max(0,h-P.day)}
+  let ot=0;for(const x of Object.values(wk))ot+=x.d+Math.max(0,(x.t-x.d)-P.week);
+  return{emp:o.emp,n:o.n,ot,reg:H(o.tot)-ot,eve:H(o.eve),night:H(o.night),sat:H(o.sat),sun:H(o.sun),hol:H(o.hol),tot:H(o.tot)}}).sort((a,b)=>a.emp.localeCompare(b.emp))}
+const RS={
+ t:{n:'Time worked',cols:{date:'Date',emp:'Employee',in:'Clock in',out:'Clock out',hrs:'Hours (decimal)',dur:'Duration',place:'Planned place',at:'Worked at',plan:'Planned time',diff:'Hours vs plan',late:'Start vs plan',tasks:'Tasks done',dist:'Distance from site at clock-in',edit:'Edited',inl:'Clock-in location',outl:'Clock-out location'},def:['date','emp','in','out','hrs'],grp:{'':'No grouping',emp:'By employee',day:'By day'}},
+ y:{n:'Payroll hours',cols:{emp:'Employee',n:'Shifts',reg:'Regular hours',ot:'Overtime hours',eve:'Evening hours',night:'Night hours',sat:'Saturday hours',sun:'Sunday hours',hol:'Public holiday hours',tot:'Total hours'},def:['emp','n','reg','ot','eve','night','sat','sun','hol','tot'],grp:{'':'One row per employee'}},
+ c:{n:'Customer hours',cols:{cust:'Customer',visits:'Visits',hrs:'Hours worked',plan:'Hours planned',missed:'Missed visits',tasks:'Tasks done',unp:'Unplanned visits'},def:['cust','visits','hrs','plan','missed','tasks','unp'],grp:{'':'One row per customer'}},
+ p:{n:'Products taken',cols:{date:'Date',emp:'Employee',item:'Product',qty:'Quantity',edit:'Edited'},def:['date','emp','item','qty'],grp:{'':'No grouping',emp:'By employee',item:'By product',day:'By day'}},
+ l:{n:'Leave',cols:{emp:'Employee',from:'From',to:'To',days:'Days',status:'Status',reason:'Reason',by:'Decided by'},def:['emp','from','to','status','reason'],grp:{'':'No grouping',emp:'By employee'}}};
+const gps=p=>p?`https://maps.google.com/?q=${p.lat},${p.lng}`:'';
+function reports(v){
+ const D={shifts:[],plans:[],leaves:[],items:[]},t=new Date();let us=[],tp=[],last={h:[],r:[],n:''};
+ const cfg={src:'t',a:dk(new Date(t.getFullYear(),t.getMonth(),1)),b:dk(Date.now()),emp:'',item:'',status:'',grp:'',cols:[...RS.t.def]};
+ v.innerHTML=`<div class="card"><h2>Build a report</h2>
+ <label>What to report on</label><select id="src">${Object.entries(RS).map(([k,x])=>`<option value="${k}">${x.n}</option>`).join('')}</select>
+ <div class="r"><div><label>From</label><input id="a" type="date"></div><div><label>To</label><input id="b" type="date"></div></div>
+ <div class="r" style="margin-top:8px"><button class="o sm" data-p="m">This month</button><button class="o sm" data-p="l">Last month</button><button class="o sm" data-p="w">This week</button></div>
+ <label>Employee</label><select id="emp"></select><div id="xf"></div>
+ <label>Group results</label><select id="grp"></select>
+ <div id="cw"><label>Columns (tick to show, untick to hide)</label><div class="r" id="cl"></div></div>
+ <label>Saved layouts</label><div class="r" style="flex-wrap:nowrap"><select id="sv"></select><button class="o" id="sl">Save</button><button class="d" id="dx">Delete</button></div>
+ <div class="r" style="margin-top:12px"><button id="pd">Save as PDF</button><button class="o" id="cv">Download CSV</button></div></div><div class="card sc" id="tb"></div>`;
+ let subA=null,unS=null,unP=null;un.push(()=>{unS&&unS();unP&&unP()});
+ const rs=()=>{if(!cfg.a||!cfg.b||subA===cfg.a+'|'+cfg.b)return;subA=cfg.a+'|'+cfg.b;unS&&unS();unP&&unP();unS=DB.watch('shifts',r=>{D.shifts=r;out()},[['t0','>=',new Date(cfg.a+'T00:00').getTime()-864e5],['t0','<=',new Date(cfg.b+'T00:00').getTime()+2*864e5]]);unP=DB.watch('plans',r=>{D.plans=r;out()},[['date','>=',addD(cfg.a,-1)],['date','<=',addD(cfg.b,1)]])};
+ const build=()=>{const R=RS[cfg.src],a=cfg.a,b=cfg.b,inr=d=>d>=a&&d<=b,cs=Object.keys(R.cols).filter(k=>cfg.cols.includes(k)),H=cs.map(k=>R.cols[k]);
+  const grp=(rows,key,lab,sumLab,sum,fmt)=>{const m={};rows.forEach(x=>{const k=key(x),o=m[k]=m[k]||{k,n:0,s:0};o.n++;o.s+=sum(x)});
+   return{n:R.n+' ('+R.grp[cfg.grp].toLowerCase()+')',h:[lab,'Entries',sumLab],r:Object.values(m).sort((x,y)=>String(x.k).localeCompare(String(y.k))).map(o=>[o.k,o.n,fmt(o.s)])}};
+  if(cfg.src=='y'){const res=paycalc(D.shifts.filter(s=>s.t1&&inr(dk(s.t0))&&(!cfg.emp||s.uid==cfg.emp)),S.pay||DEF.pay),
+    rows=res.map(o=>cs.map(k=>k=='emp'?o.emp:k=='n'?o.n:o[k].toFixed(2))),sum=k=>res.reduce((q,o)=>q+o[k],0);
+   return{n:R.n,h:H,r:rows,foot:rows.length?cs.map((k,i)=>i==0?'Total':k=='n'?res.reduce((q,o)=>q+o.n,0):k=='emp'?'':sum(k).toFixed(2)):null,
+    note:'Completed shifts only. Evening, night, weekend and public holiday hours are also included in the total. Overtime is counted separately from regular hours. Rules come from Settings, so check them against your collective agreement.'}}
+  if(cfg.src=='c'){const sh=D.shifts.filter(s=>s.t1&&inr(dk(s.t0))),pn=D.plans.filter(p=>inr(p.date)&&!p.open&&p.kind!='meeting'&&p.uid),M={},K=(id,nm)=>M[id||nm]=M[id||nm]||{cust:nm,visits:0,ms:0,pm:0,missed:0,tk:0,tt:0,unp:0},done=new Set(D.shifts.map(s=>s.planId).filter(Boolean));
+   sh.forEach(s=>{const o=K(s.siteId,s.place||'-');o.visits++;o.ms+=s.t1-s.t0;if(s.tasksTotal){o.tk+=(s.ticks||[]).length;o.tt+=s.tasksTotal}if(s.unplanned)o.unp++});
+   pn.forEach(p=>{const o=K(p.siteId,p.place);o.pm+=(mins(p.end)-mins(p.start))*6e4;if(p.date<dk(Date.now())&&!done.has(p.id)&&!D.leaves.some(l=>l.uid==p.uid&&l.status=='approved'&&l.from<=p.date&&l.to>=p.date))o.missed++});
+   const L=Object.values(M).sort((x,y)=>x.cust.localeCompare(y.cust)),rows=L.map(o=>{const f={cust:o.cust,visits:o.visits,hrs:(o.ms/36e5).toFixed(2),plan:(o.pm/36e5).toFixed(2),missed:o.missed,tasks:o.tt?Math.round(o.tk/o.tt*100)+'%':'-',unp:o.unp};return cs.map(k=>f[k])}),sm=k=>L.reduce((q,o)=>q+o[k],0);
+   const T={visits:sm('visits'),hrs:(sm('ms')/36e5).toFixed(2),plan:(sm('pm')/36e5).toFixed(2),missed:sm('missed'),unp:sm('unp')};
+   return{n:R.n,h:H,r:rows,foot:rows.length?cs.map((k,i)=>i==0?'Total':T[k]!==undefined?T[k]:''):null,note:'Missed visits: planned shifts in the past with no matching clock-in and no approved leave.'}}
+  if(cfg.src=='t'){const sh=D.shifts.filter(s=>inr(dk(s.t0))&&(!cfg.emp||s.uid==cfg.emp)).sort((x,y)=>x.t0-y.t0),ms=s=>(s.t1||Date.now())-s.t0;
+   if(cfg.grp)return grp(sh,s=>cfg.grp=='emp'?s.name:dk(s.t0),cfg.grp=='emp'?'Employee':'Date','Hours',ms,x=>(x/36e5).toFixed(2));
+   const rows=sh.map(s=>{const p=D.plans.find(x=>x.id==s.planId)||(s.unplanned?null:D.plans.find(x=>x.uid==s.uid&&x.date==dk(s.t0))),pm=p?(mins(p.end)-mins(p.start))*6e4:0,st=p?Math.round((s.t0-new Date(p.date+'T'+p.start))/6e4):0;
+    const f={date:dk(s.t0),emp:s.name,in:hm(s.t0),out:s.t1?hm(s.t1):'open',hrs:(ms(s)/36e5).toFixed(2),dur:fdur(ms(s)),place:p?p.place:'-',at:s.place?s.place+(s.other?' (other)':'')+(s.note&&!s.other?' - '+s.note:''):'-',plan:p?p.start+'-'+p.end:'-',diff:p&&s.t1?fsg(ms(s)-pm):'-',late:p?(st>0?st+' min late':st<0?(-st)+' min early':'on time'):'-',tasks:s.tasksTotal?(s.ticks||[]).length+'/'+s.tasksTotal:'-',dist:s.dist!=null?s.dist+' m':'-',edit:s.edited?'yes':'',inl:gps(s.inLoc),outl:gps(s.outLoc)};
+    return cs.map(k=>f[k])});
+   const tm=sh.reduce((q,s)=>q+ms(s),0);return{n:R.n,h:H,r:rows,foot:rows.length?cs.map((k,i)=>k=='hrs'?(tm/36e5).toFixed(2):k=='dur'?fdur(tm):i==0?'Total':''):null}}
+  if(cfg.src=='p'){const it=D.items.filter(x=>inr(x.date||dk(x.ts))&&(!cfg.emp||x.uid==cfg.emp)&&(!cfg.item||x.item==cfg.item)).sort((x,y)=>(x.date||dk(x.ts)).localeCompare(y.date||dk(y.ts)));
+   if(cfg.grp)return grp(it,x=>cfg.grp=='emp'?x.name:cfg.grp=='item'?x.item:(x.date||dk(x.ts)),cfg.grp=='emp'?'Employee':cfg.grp=='item'?'Product':'Date','Total quantity',x=>+x.qty||0,x=>x);
+   const rows=it.map(x=>{const f={date:x.date||dk(x.ts),emp:x.name,item:x.item,qty:x.qty,edit:x.edited?'yes':''};return cs.map(k=>f[k])}),q=it.reduce((n,x)=>n+(+x.qty||0),0);
+   return{n:R.n,h:H,r:rows,foot:rows.length?cs.map((k,i)=>k=='qty'?q:i==0?'Total':''):null}}
+  const lv=D.leaves.filter(x=>x.from<=b&&x.to>=a&&(!cfg.emp||x.uid==cfg.emp)&&(!cfg.status||x.status==cfg.status)),dy=x=>Math.round((new Date(x.to)-new Date(x.from))/864e5)+1;
+  if(cfg.grp)return grp(lv,x=>x.name,'Employee','Days',dy,x=>x);
+  return{n:R.n,h:H,r:lv.map(x=>{const f={emp:x.name,from:x.from,to:x.to,days:dy(x),status:x.status,reason:x.reason,by:x.by||''};return cs.map(k=>f[k])}),foot:null}};
+ const out=()=>{rs();last=build();$('#tb').innerHTML=`<table><tr>${last.h.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>${last.r.map(w=>`<tr>${w.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}${last.foot?`<tr>${last.foot.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>`:''}</table>${last.r.length?'':'<p class="m">No data in this range.</p>'}${last.note?`<p class="m">${esc(last.note)}</p>`:''}`};
+ const ctl=()=>{const R=RS[cfg.src];
+  $('#src').value=cfg.src;$('#a').value=cfg.a;$('#b').value=cfg.b;
+  $('#emp').innerHTML='<option value="">Everyone</option>'+us.map(x=>`<option value="${x.id}">${esc(x.name)}${x.active===false?' (removed)':''}</option>`).join('');$('#emp').value=cfg.emp;
+  $('#xf').innerHTML=cfg.src=='p'?`<label>Product</label><select id="it"><option value="">All products</option>${[...new Set(D.items.map(x=>x.item))].sort().map(x=>`<option>${esc(x)}</option>`).join('')}</select>`
+   :cfg.src=='l'?`<label>Status</label><select id="stt"><option value="">All</option><option>pending</option><option>approved</option><option>rejected</option></select>`:'';
+  if($('#it')){$('#it').value=cfg.item;$('#it').onchange=()=>{cfg.item=$('#it').value;out()}}
+  if($('#stt')){$('#stt').value=cfg.status;$('#stt').onchange=()=>{cfg.status=$('#stt').value;out()}}
+  $('#grp').innerHTML=Object.entries(R.grp).map(([k,n])=>`<option value="${k}">${n}</option>`).join('');$('#grp').value=cfg.grp;
+  $('#cw').hidden=!!cfg.grp;
+  $('#cl').innerHTML=Object.entries(R.cols).map(([k,n])=>`<label class="ck" style="flex:0 0 46%"><input type="checkbox" class="cc" value="${k}" ${cfg.cols.includes(k)?'checked':''}>${n}</label>`).join('');
+  v.querySelectorAll('.cc').forEach(c=>c.onchange=()=>{cfg.cols=[...v.querySelectorAll('.cc')].filter(x=>x.checked).map(x=>x.value);out()});
+  $('#sv').innerHTML='<option value="">Choose...</option>'+tp.filter(x=>x.cfg&&x.cfg.src==cfg.src).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')};
+ $('#src').onchange=()=>{cfg.src=$('#src').value;Object.assign(cfg,{emp:'',item:'',status:'',grp:'',cols:[...RS[cfg.src].def]});ctl();out()};
+ $('#a').onchange=()=>{cfg.a=$('#a').value;out()};$('#b').onchange=()=>{cfg.b=$('#b').value;out()};
+ $('#emp').onchange=()=>{cfg.emp=$('#emp').value;out()};$('#grp').onchange=()=>{cfg.grp=$('#grp').value;ctl();out()};
+ v.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{const n=new Date(),p=b.dataset.p;
+  if(p=='m'){cfg.a=dk(new Date(n.getFullYear(),n.getMonth(),1));cfg.b=dk(Date.now())}
+  if(p=='l'){cfg.a=dk(new Date(n.getFullYear(),n.getMonth()-1,1));cfg.b=dk(new Date(n.getFullYear(),n.getMonth(),0))}
+  if(p=='w'){cfg.a=mon(dk(Date.now()));cfg.b=dk(Date.now())}
+  ctl();out()});
+ $('#sv').onchange=()=>{const x=tp.find(y=>y.id==$('#sv').value);if(x){Object.assign(cfg,{emp:'',item:'',status:'',grp:'',cols:[...RS[x.cfg.src].def]},x.cfg);ctl();out()}};
+ $('#sl').onclick=async()=>{const n=(prompt('Name this report layout')||'').trim();if(!n)return;
+  await DB.add('rtpl',{name:n,cfg:{src:cfg.src,emp:cfg.emp,item:cfg.item,status:cfg.status,grp:cfg.grp,cols:cfg.cols}})};
+ $('#dx').onclick=async()=>{const id=$('#sv').value;if(id&&confirm('Delete this saved layout?'))await DB.del('rtpl',id)};
+ $('#cv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"',c=[last.h,...last.r,...(last.foot?[last.foot]:[])].map(r=>r.map(q).join(',')).join('\r\n'),
+  a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+c],{type:'text/csv'}));a.download=last.n.replace(/\W+/g,'-')+'-'+cfg.a+'-to-'+cfg.b+'.csv';a.click()};
+ $('#pd').onclick=()=>{const w=window.open('','_blank');if(!w){alert('Allow pop-ups to save the PDF.');return}
+  w.document.write(`<title>${esc(last.n)}</title><style>body{font:13px system-ui;margin:20px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #999;padding:5px;text-align:left}th{background:#eee}</style><h2>${esc(last.n)}</h2><p>${cfg.a} to ${cfg.b}. Created ${fdt(Date.now())}</p><table><tr>${last.h.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>${last.r.map(x=>`<tr>${x.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}${last.foot?`<tr>${last.foot.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>`:''}</table>${last.note?`<p>${esc(last.note)}</p>`:''}`);
+  w.document.close();setTimeout(()=>w.print(),300)};
+ live('users',r=>{us=r;ctl()});live('rtpl',r=>{tp=r;ctl()});live('items',r=>{D.items=r;ctl();out()});
+ live('leaves',r=>{D.leaves=r;out()});
+ ctl();out();
+}
+
+// ---- Quotes and invoices (owner only) ----
+const itot=ls=>{let net=0,vat=0;ls.forEach(l=>{const n=(+l.q||0)*(+l.p||0);net+=n;vat+=n*(+l.v||0)/100});return{net,vat,gross:net+vat}};
+function docBody(i,biz){const q=i.type=='quote',T=itot(i.lines),rates={};biz=biz||{};
+ i.lines.forEach(l=>{const n=l.q*l.p,r=rates[l.v]=rates[l.v]||{n:0,v:0};r.n+=n;r.v+=n*l.v/100});
+ return`<div class="g"><div><h1>${esc(biz.name||'Company')}</h1><div class="s">${esc(biz.addr||'')}\n${esc([biz.email,biz.phone].filter(Boolean).join(' | '))}\n${biz.bid?'Business ID '+esc(biz.bid):''}${biz.vat?'\nVAT no. '+esc(biz.vat):''}</div></div>
+ <div style="text-align:right"><h1>${q?'Quote':'Invoice'} ${esc(i.no)}</h1><div class="s">Date: ${esc(i.date)}\n${q?'Valid until':'Due'}: ${esc(i.due)}</div></div></div>
+ <p><b>${q?'Prepared for':'Bill to'}</b><br>${esc(i.customer.name)}<br><span class="s">${esc(i.customer.addr||'')}${i.customer.bid?'\n'+esc(i.customer.bid):''}</span></p>
+ <table><tr><th>Description</th><th class="n">Qty</th><th class="n">Unit price</th><th class="n">VAT %</th><th class="n">Net</th></tr>${i.lines.map(l=>`<tr><td>${esc(l.d)}</td><td class="n">${l.q}</td><td class="n">${eur(l.p)}</td><td class="n">${l.v}</td><td class="n">${eur(l.q*l.p)}</td></tr>`).join('')}</table>
+ <table style="width:55%;margin-left:auto"><tr><td>Net total</td><td class="n">${eur(T.net)}</td></tr>${Object.entries(rates).map(([r,x])=>`<tr><td>VAT ${r}% of ${eur(x.n)}</td><td class="n">${eur(x.v)}</td></tr>`).join('')}<tr class="t"><td><b>${q?'Total':'Total to pay'}</b></td><td class="n"><b>${eur(T.gross)}</b></td></tr></table>
+ <p class="s">${!q&&biz.iban?'Pay to IBAN '+esc(biz.iban)+(biz.bic?' (BIC '+esc(biz.bic)+')':'')+'\n':''}${esc(i.note||'')}${biz.terms?'\n'+esc(biz.terms):''}</p>`}
+function invoices(v){
+ let inv=[],rawInv=[],biz={},ed=null,edType='invoice',lines=[],showB=false,cu=[],sh=[],pls=[],shr={},checked=false;
+ const nextNo=t=>{const y=(t=='quote'?'Q-':'')+new Date().getFullYear()+'-',n=Math.max(0,...rawInv.filter(i=>i.no.startsWith(y)).map(i=>parseInt(i.no.slice(y.length))||0));return y+String(n+1).padStart(3,'0')};
+ const BF=[['name','Company name'],['addr','Address'],['bid','Business ID (Y-tunnus)'],['vat','VAT number'],['iban','IBAN'],['bic','BIC'],['email','Email'],['phone','Phone'],['terms','Payment terms or footer text']];
+ v.innerHTML=`<div class="card"><div class="r"><button id="nw">New invoice</button><button id="nq" class="o">New quote</button></div><div class="r" style="margin-top:8px"><button class="o sm" id="bz">Company details</button><button class="o sm" id="rf">Check customer responses</button></div><div id="bf" hidden></div></div><div class="card" id="lk" hidden></div><div id="edc"></div><div class="card"><b>Quotes and invoices</b><div id="l"></div></div>`;
+ const bform=()=>{$('#bf').hidden=!showB;if(!showB)return;
+  $('#bf').innerHTML='<hr><small>These details are printed on your quotes and invoices. Only the owner can see them here. Customers see them on documents you share.</small>'+BF.map(([k,n])=>`<label>${n}</label><input data-b="${k}" value="${esc(biz[k]||'')}">`).join('')+'<p class="m" id="bm"></p><button id="bs">Save company details</button>';
+  $('#bs').onclick=async()=>{BF.forEach(([k])=>biz[k]=v.querySelector(`[data-b=${k}]`).value.trim());await DB.setD('private','biz',biz);$('#bm').textContent='Saved.'}};
+ const totals=()=>{const t=itot(lines);$('#tt').innerHTML=`Net ${eur(t.net)} + VAT ${eur(t.vat)} = <b>${eur(t.gross)}</b>`};
+ const lnDraw=()=>{$('#ls').innerHTML=lines.map((l,i)=>`<div class="ln"><input placeholder="Description" data-i="${i}" data-f="d" value="${esc(l.d)}"><input type="number" min="0" step="any" placeholder="Qty" data-i="${i}" data-f="q" value="${l.q}"><input type="number" min="0" step="any" placeholder="Price" data-i="${i}" data-f="p" value="${l.p}"><input type="number" min="0" step="any" placeholder="VAT %" data-i="${i}" data-f="v" value="${l.v}"><button class="d" data-rl="${i}">x</button></div>`).join('');
+  $('#ls').querySelectorAll('input').forEach(x=>x.oninput=()=>{lines[x.dataset.i][x.dataset.f]=x.value;totals()});
+  $('#ls').querySelectorAll('[data-rl]').forEach(b=>b.onclick=()=>{lines.splice(+b.dataset.rl,1);if(!lines.length)lines.push({d:'',q:1,p:'',v:S.vat});lnDraw()});totals()};
+ const publish=async i=>{const t=i.token||tok(),T=itot(i.lines);
+  await DB.setD('shares',t,{type:i.type||'invoice',no:i.no,date:i.date,due:i.due,customer:{name:i.customer.name,addr:i.customer.addr||''},lines:i.lines,note:i.note||'',total:T.gross,biz:{...biz},status:i.status,response:null,ts:Date.now()});
+  if(!i.token)await DB.upd('invoices',i.id,{token:t});return t};
+ const showLink=(i,u)=>{$('#lk').hidden=false;$('#lk').innerHTML=`<b>Link for ${esc(i.no)}</b><p class="m">Anyone with this link can view this document. Send it only to the customer.${i.type=='quote'?' They can accept or decline from the link.':''}</p><input id="lu" readonly value="${esc(u)}">
+  <div class="r" style="margin-top:8px"><button id="lc">Copy link</button><a href="https://wa.me/?text=${encodeURIComponent(u)}" target="_blank" rel="noopener"><button class="o" style="width:100%">WhatsApp</button></a><a href="mailto:${esc(i.customer.email||'')}?subject=${encodeURIComponent((i.type=='quote'?'Quote ':'Invoice ')+i.no)}&body=${encodeURIComponent(u)}"><button class="o" style="width:100%">Email</button></a></div>`;
+  $('#lc').onclick=()=>{if(navigator.clipboard)navigator.clipboard.writeText(u).then(()=>$('#lc').textContent='Copied');else{$('#lu').select();document.execCommand('copy')}};scrollTo(0,0)};
+ const refresh=async()=>{for(const i of inv.filter(x=>x.token)){try{const s=await DB.getD('shares',i.token);if(!s)continue;shr[i.id]=s;
+   if(i.type=='quote'&&s.response&&i.status!=s.response)await DB.upd('invoices',i.id,{status:s.response})}catch(e){}}draw()};
+ const hrs=async(cid,a,b)=>(await DB.list('shifts',['t0','>=',new Date(a+'T00:00').getTime()])).filter(s=>s.t1&&dk(s.t0)<=b&&s.siteId==cid).reduce((n,s)=>n+(s.t1-s.t0),0)/36e5;
+ const open=(id,type,pre)=>{ed=id;const i=id=='new'?null:inv.find(x=>x.id==id);edType=i?(i.type||'invoice'):type;const q=edType=='quote',src=i||pre||{},c=src.customer||{},d0=dk(Date.now()),n=new Date(),la=dk(new Date(n.getFullYear(),n.getMonth()-1,1)),lb=dk(new Date(n.getFullYear(),n.getMonth(),0));
+  lines=src.lines?src.lines.map(l=>({...l})):[{d:'',q:1,p:'',v:S.vat}];
+  $('#edc').innerHTML=`<div class="card"><h2>${i?'Edit '+(q?'quote ':'invoice ')+esc(i.no):'New '+(q?'quote':'invoice')}</h2>
+  <label>Customer</label><input id="cn" list="cu" value="${esc(c.name||'')}" autocomplete="off"><datalist id="cu">${[...new Map(inv.map(x=>[x.customer.name,x.customer])).keys()].map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+  <label>Address</label><textarea id="ca" rows="2">${esc(c.addr||'')}</textarea>
+  <div class="r"><div><label>Email</label><input id="ce" value="${esc(c.email||'')}"></div><div><label>Customer ID or VAT no. (optional)</label><input id="cb" value="${esc(c.bid||'')}"></div></div>
+  <div class="r"><div><label>${q?'Quote':'Invoice'} number</label><input id="no" value="${esc(i?i.no:nextNo(edType))}"></div><div><label>Status</label><select id="stt">${(q?['draft','sent','accepted','declined']:['draft','sent','paid']).map(s=>`<option>${s}</option>`).join('')}</select></div></div>
+  <div class="r"><div><label>${q?'Quote':'Invoice'} date</label><input id="idt" type="date" value="${i?i.date:d0}"></div><div><label>${q?'Valid until':'Due date'}</label><input id="du" type="date" value="${i?i.due:dk(Date.now()+(q?30:14)*864e5)}"></div></div>
+  ${q?'':`<details style="margin-top:12px"><summary>Fill from worked hours (optional)</summary><div class="r"><div><label>Customer or site</label><select id="hc">${cu.filter(x=>x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select></div><div><label>Hourly price (no VAT)</label><input id="hp" type="number" min="0" step="any"></div></div>
+  <div class="r"><div><label>From</label><input id="hf" type="date" value="${la}"></div><div><label>To</label><input id="ht" type="date" value="${lb}"></div></div><p class="m" id="hm"></p><button class="o sm" id="hb">Add hours as a line</button></details>`}
+  <label>Lines (description, quantity, unit price without VAT, VAT %)</label><div id="ls"></div><button class="o sm" id="al">Add line</button>
+  <label>Note or payment reference</label><textarea id="nt" rows="2">${esc(src.note||'')}</textarea>
+  <p id="tt" style="margin-top:10px"></p><p class="e" id="er"></p><div class="r"><button id="svi">Save ${q?'quote':'invoice'}</button><button class="o" id="cx">Cancel</button></div></div>`;
+  $('#stt').value=i?i.status:'draft';lnDraw();
+  $('#cn').onchange=()=>{const m=inv.find(x=>x.customer.name==$('#cn').value.trim());if(m&&!$('#ca').value){$('#ca').value=m.customer.addr||'';$('#ce').value=m.customer.email||'';$('#cb').value=m.customer.bid||''}};
+  $('#al').onclick=()=>{lines.push({d:'',q:1,p:'',v:S.vat});lnDraw()};$('#cx').onclick=()=>{ed=null;$('#edc').innerHTML=''};
+  if($('#hb'))$('#hb').onclick=async()=>{const cid=$('#hc').value,cc=cu.find(x=>x.id==cid),a=$('#hf').value,b=$('#ht').value,p=$('#hp').value;
+   if(!cc)return $('#hm').textContent='Add customers first in the Customers tab.';if(p===''||+p<0)return $('#hm').textContent='Enter the hourly price.';
+   const h=await hrs(cid,a,b);if(!h)return $('#hm').textContent='No completed shifts found for this customer in that period.';
+   if(!$('#cn').value.trim()){$('#cn').value=cc.name;$('#ca').value=cc.addr||''}
+   lines=lines.filter(l=>l.d||l.p!=='');lines.push({d:`Cleaning at ${cc.name}, ${a} to ${b}`,q:+h.toFixed(2),p:+p,v:S.vat});lnDraw();$('#hm').textContent=`Added ${h.toFixed(2)} hours.`};
+  $('#svi').onclick=async()=>{const E=m=>$('#er').textContent=m,no=$('#no').value.trim(),name=$('#cn').value.trim(),ok=lines.filter(l=>l.d.trim()&&(+l.q>0)&&(+l.p>=0)&&l.p!=='');
+   if(!name)return E('Enter the customer name.');if(!no)return E('Enter a number.');if(rawInv.some(x=>x.no==no&&x.id!=ed))return E('That number is already used.');
+   if(!ok.length)return E('Add at least one line with a description, quantity and price.');if($('#du').value<$('#idt').value)return E('The second date is before the first date.');
+   const o={type:edType,no,customer:{name,addr:$('#ca').value.trim(),email:$('#ce').value.trim(),bid:$('#cb').value.trim()},date:$('#idt').value,due:$('#du').value,lines:ok.map(l=>({d:l.d.trim(),q:+l.q,p:+l.p,v:+l.v||0})),note:$('#nt').value.trim(),status:$('#stt').value,total:itot(ok).gross};
+   if(ed=='new')await DB.add('invoices',o);else{const old=inv.find(x=>x.id==ed);audit('invoices',ed,'edited',(old?old.no+' '+old.customer.name+' '+eur(itot(old.lines).gross):'')+' -> '+eur(o.total));await DB.upd('invoices',ed,{...o,editedAt:Date.now()});if(old&&old.token)await publish({...old,...o,id:ed})}
+   ed=null;$('#edc').innerHTML=''}};
+ const pdf=i=>{const w=window.open('','_blank');if(!w){alert('Allow pop-ups to save the PDF.');return}
+  w.document.write(`<title>${i.type=='quote'?'Quote':'Invoice'} ${esc(i.no)}</title><style>body{font:13px system-ui;margin:36px;color:#111}.doc table{border-collapse:collapse;width:100%;margin:16px 0}.doc th,.doc td{border-bottom:1px solid #bbb;padding:6px;text-align:left}.doc td.n,.doc th.n{text-align:right}.doc .g{display:flex;justify-content:space-between;gap:20px}.doc .s{color:#555;white-space:pre-line}.doc h1{margin:0 0 4px;font-size:22px}.doc .t{font-size:16px}</style><div class="doc">${docBody(i,biz)}</div>`);
+  w.document.close();setTimeout(()=>w.print(),300)};
+ const draw=()=>{$('#l').innerHTML=inv.map(i=>{const q=i.type=='quote',s=shr[i.id];
+  return`<hr><b>${esc(i.no)}</b> ${esc(i.customer.name)} <span class="tag">${q?'Quote':'Invoice'}</span> <span class="tag">${i.status}</span>${s&&s.response?` <small>customer ${s.response} ${fdt(s.respondedAt)}</small>`:''}<br><small>${i.date}, ${q?'valid until':'due'} ${i.due} | ${eur(itot(i.lines).gross)}</small>
+  <div class="r" style="margin-top:6px"><button class="o sm" data-ie="${i.id}">Edit</button><button class="o sm" data-ip="${i.id}">PDF</button><button class="o sm" data-sh="${i.id}">Share link</button>
+  ${i.status=='draft'?`<button class="sm" data-is="${i.id}">Mark sent</button>`:''}${!q&&i.status=='sent'?`<button class="sm" data-is="${i.id}">Mark paid</button>`:''}${q&&i.status=='sent'?`<button class="sm" data-qs="${i.id}|accepted">Accepted</button><button class="o sm" data-qs="${i.id}|declined">Declined</button>`:''}${q&&i.status=='accepted'?`<button class="sm" data-ci="${i.id}">Create invoice</button>`:''}${i.status=='draft'?`<button class="d sm" data-id="${i.id}">Delete</button>`:''}</div>`}).join('')||'<p class="m">Nothing yet.</p>';
+  v.querySelectorAll('[data-ie]').forEach(b=>b.onclick=()=>{open(b.dataset.ie);scrollTo(0,0)});
+  v.querySelectorAll('[data-ip]').forEach(b=>b.onclick=()=>pdf(inv.find(x=>x.id==b.dataset.ip)));
+  v.querySelectorAll('[data-sh]').forEach(b=>b.onclick=async()=>{const i=inv.find(x=>x.id==b.dataset.sh);try{const t=await publish(i);showLink(i,location.origin+location.pathname+'#/v/'+t)}catch(e){alert('Could not create the link: '+e.message)}});
+  v.querySelectorAll('[data-is]').forEach(b=>b.onclick=()=>{const i=inv.find(x=>x.id==b.dataset.is);DB.upd('invoices',i.id,{status:i.status=='draft'?'sent':'paid'})});
+  v.querySelectorAll('[data-qs]').forEach(b=>{const[id,s]=b.dataset.qs.split('|');b.onclick=()=>DB.upd('invoices',id,{status:s})});
+  v.querySelectorAll('[data-ci]').forEach(b=>b.onclick=()=>{const i=inv.find(x=>x.id==b.dataset.ci);open('new','invoice',{customer:i.customer,lines:i.lines,note:i.note});scrollTo(0,0)});
+  v.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>confirm('Remove this draft? It stays in Records and keeps its number.')&&DB.del('invoices',b.dataset.id))};
+ $('#nw').onclick=()=>open('new','invoice');$('#nq').onclick=()=>open('new','quote');$('#bz').onclick=()=>{showB=!showB;bform()};$('#rf').onclick=refresh;
+ DB.getD('private','biz').then(b=>{biz=b||{};if(!biz.name){showB=true}bform()});
+ live('invoices',r=>{rawInv=r},undefined,true);live('invoices',r=>{inv=r;draw();if(!checked&&r.length){checked=true;refresh()}});live('customers',r=>{cu=r});
+}
+async function publicView(t){
+ $('#nav').hidden=true;$('#who').innerHTML='';const v=$('#view');v.innerHTML='<div class="card"><p class="m">Loading...</p></div>';
+ let d=null;try{d=await DB.getD('shares',t)}catch(e){}
+ if(!d){v.innerHTML='<div class="card"><h2>Link not found</h2><p class="m">This link is not valid or has been removed. Ask the sender for a new one.</p></div>';return}
+ const q=d.type=='quote',draw=()=>{v.innerHTML=`<div class="card doc">${docBody(d,d.biz)}</div><div class="card noprint">${q?(d.response?`<p><b>You ${d.response} this quote.</b> Thank you.</p>`:'<p>Please confirm your decision on this quote.</p><div class="r"><button id="ac">Accept quote</button><button class="d" id="dc">Decline</button></div>'):''}
+  <div style="margin-top:10px"><button class="o" id="pr">Print or save as PDF</button></div><p class="e" id="er"></p></div>`;
+  const ans=async r=>{if(!confirm(r=='accepted'?'Accept this quote?':'Decline this quote?'))return;try{const at=Date.now();await DB.updD('shares',t,{response:r,respondedAt:at});d.response=r;draw()}catch(e){$('#er').textContent='Could not send your answer. Please try again or contact the company.'}};
+  if($('#ac')){$('#ac').onclick=()=>ans('accepted');$('#dc').onclick=()=>ans('declined')}$('#pr').onclick=()=>print()};
+ draw();
+}
+
+function settings(v){
+ const P=S.pay||DEF.pay;
+ v.innerHTML=`<div class="card"><h2>Settings</h2><small>Prices shown on the public quote page.</small>
+ ${Object.keys(S.rates).map(k=>`<label>${k} (€ per m²)</label><input class="rt" data-k="${k}" type="number" step="0.1" value="${S.rates[k]}">`).join('')}
+ <div class="r"><div><label>Minimum price (€)</label><input id="mn" type="number" value="${S.min}"></div><div><label>VAT %</label><input id="vt" type="number" step="0.1" value="${S.vat}"></div></div>
+ <label>Quote extras (one per line: Name=price)</label><textarea id="ex" rows="3">${Object.entries(S.extras).map(([k,p])=>k+'='+p).join('\n')}</textarea>
+ <label>Item list for employees (one per line)</label><textarea id="ct" rows="4">${S.catalog.map(esc).join('\n')}</textarea>
+ <label>WhatsApp number with country code (optional)</label><input id="ph" value="${esc(S.phone)}" placeholder="358401234567">
+ <hr><h2>Payroll hours rules</h2><small>Used only in the Payroll hours report. Set them from your collective agreement and check them with your accountant.</small>
+ <div class="r"><div><label>Overtime after hours per day</label><input id="pd" type="number" step="0.25" value="${P.day}"></div><div><label>Overtime after hours per week</label><input id="pw" type="number" step="0.25" value="${P.week}"></div></div>
+ <div class="r"><div><label>Evening from (hour 0-24)</label><input id="pes" type="number" min="0" max="24" value="${P.eveS}"></div><div><label>Evening until</label><input id="pee" type="number" min="0" max="24" value="${P.eveE}"></div></div>
+ <div class="r"><div><label>Night from (hour 0-24)</label><input id="pns" type="number" min="0" max="24" value="${P.nightS}"></div><div><label>Night until</label><input id="pne" type="number" min="0" max="24" value="${P.nightE}"></div></div>
+ <label class="ck" style="margin-top:12px"><input type="checkbox" id="pev" ${P.eves!==false?'checked':''}>Count Christmas Eve and Midsummer Eve as public holidays (depends on your agreement)</label>
+ <p class="e" id="er"></p><button id="go">Save</button></div>`;
+ $('#go').onclick=async()=>{const rates={};v.querySelectorAll('.rt').forEach(x=>rates[x.dataset.k]=+x.value);
+  const extras={};$('#ex').value.split('\n').forEach(l=>{const[a,b]=l.split('=');if(a&&b&&!isNaN(+b))extras[a.trim()]=+b});
+  const pay={day:+$('#pd').value||8,week:+$('#pw').value||40,eveS:+$('#pes').value,eveE:+$('#pee').value,nightS:+$('#pns').value,nightE:+$('#pne').value,eves:$('#pev').checked};
+  S={...S,rates,extras,pay,min:+$('#mn').value,vat:+$('#vt').value,phone:$('#ph').value.trim(),catalog:$('#ct').value.split('\n').map(x=>x.trim()).filter(Boolean)};
+  try{await DB.setS(S);$('#er').textContent='Saved.'}catch(e){$('#er').textContent=e.message}};
+}
+
+(async()=>{
+ try{DB=wrapDB(FIREBASE_CONFIG?await fbDB():localDB());U=await DB.cur();S={...DEF,...await DB.getS()}}
+ catch(e){DB=wrapDB(localDB());U=await DB.cur();S=DEF;console.error(e)}
+ const m=location.hash.match(/^#\/v\/([a-z0-9]+)$/);if(m){publicView(m[1]);return}
+ const off=()=>{const o=$('#off');if(o)o.hidden=navigator.onLine!==false};addEventListener('online',off);addEventListener('offline',off);off();
+ if(U)startTrack();render();
+})();
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
