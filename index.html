@@ -48,7 +48,7 @@ details summary{cursor:pointer;color:var(--a);font-weight:600;font-size:.9rem}
  #nav{top:0;bottom:auto;right:auto;width:210px;flex-direction:column;border-top:0;border-right:1px solid var(--l);padding:18px 10px;overflow-y:auto}
  #nav button{flex-direction:row;gap:12px;min-width:0;width:100%;font-size:.92rem;padding:11px 12px}
 }
-#wfm:not([hidden]){position:fixed;left:50%;top:5vh;transform:translateX(-50%);width:min(560px,94vw);max-height:88vh;overflow:auto;z-index:60;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}#wmb{position:sticky;top:0;z-index:20;max-height:55vh;overflow:auto;border:2px solid #b24a0e}#wact{position:sticky;top:0;z-index:20;max-height:50vh;overflow:auto;border:2px solid var(--pr,#0b6e7a)}.lcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.lcal>div{min-height:54px;border:1px solid var(--ln,#ddd);border-radius:6px;padding:2px;font-size:.7rem;overflow:hidden}.lcal .h{min-height:0;border:0;text-align:center;font-weight:600}.lcal .lt{display:block;background:var(--as);border-radius:4px;margin-top:2px;padding:0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lcal .lt.pn{opacity:.6;border:1px dashed currentColor}.lcal .td{outline:2px solid #0b6e7a}.lcal .ho{background:#fff4d6}</style></head><body>
+#wfm:not([hidden]){position:fixed;left:50%;top:5vh;transform:translateX(-50%);width:min(560px,94vw);max-height:88vh;overflow:auto;z-index:60;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}#wmb{position:sticky;top:0;z-index:20;max-height:55vh;overflow:auto;border:2px solid #b24a0e}#wact{position:sticky;top:0;z-index:20;max-height:50vh;overflow:auto;border:2px solid var(--pr,#0b6e7a)}.lcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.lcal>div{min-height:54px;border:1px solid var(--ln,#ddd);border-radius:6px;padding:2px;font-size:.7rem;overflow:hidden}.lcal .h{min-height:0;border:0;text-align:center;font-weight:600}.lcal .lt{display:block;background:var(--as);border-radius:4px;margin-top:2px;padding:0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lcal .lt.pn{opacity:.6;border:1px dashed currentColor}.lcal .td{outline:2px solid #0b6e7a}.lcal .ho{background:#fff4d6}.mtabs{display:flex;border-bottom:2px solid #dde3e8;margin:10px 0 0}.mtabs button{flex:1;width:auto;background:none;border:0;border-bottom:3px solid transparent;border-radius:0;color:inherit;padding:12px 6px;font-weight:600;margin:0;box-shadow:none}.mtabs button.on{border-bottom-color:#0b6e7a;color:#0b6e7a}.mrow{padding:13px 4px;border-bottom:1px solid #e3e8ec;cursor:pointer}.mrow .t{font-size:1.05rem}.mrow.un .t{font-weight:800}.mrow.un:before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;background:#0b6e7a;margin-right:8px}.fab{width:46px;height:46px;border-radius:50%;padding:0;font-size:1.7rem;line-height:1;flex:none}.msg.cur{outline:2px solid #0b6e7a}</style></head><body>
 <header><div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 8.8"/></svg><b>SiivousNinjat Oy</b></div><div id="who" class="r"></div></header>
 <div id="toast" class="card" hidden style="position:fixed;top:60px;left:12px;right:12px;z-index:9;max-width:520px;margin:auto;border-color:var(--a)"></div>
 <main><div id="off" class="card e" hidden><small>You are offline. Clock in, clock out and edits are saved on this phone and sync when the signal returns.</small></div><div id="demo"></div><div id="view"></div></main><nav id="nav"></nav>
@@ -760,43 +760,53 @@ async function translate(text,to){
  const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=Autodetect|'+to),j=await r.json(),t=j.responseData&&j.responseData.translatedText;
  if(!t||/MYMEMORY WARNING|INVALID/i.test(t))throw Error('The translation service is busy or unavailable.');return t}
 function msgs(v){
- let us=[],ms=[],en=[],to='all',rp=null,lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
+ let us=[],ms=[],en=[],tb='in',mode='list',cur=null,lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
  if(!LANGS[lang])lang='en';const tr={};
- v.innerHTML=`<div class="card"><label>Chat with</label><select id="to"></select>
-  <div class="r"><div><label>Translate into</label><select id="lg">${Object.entries(LANGS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
-  <label class="ck" style="flex:1.2;margin-top:24px"><input type="checkbox" id="au">Translate automatically</label></div>
-  <small>Uses your browser's on-device translator when it has one. Otherwise the message text is sent to a free online translation service.</small></div><div class="card" id="bx"></div>`;
- $('#lg').value=lang;$('#au').checked=auto;
- const send=async()=>{const t=$('#tx').value.trim();if(!t)return;let sj=$('#sj').value.trim().slice(0,120);if(!sj&&rp&&rp.subject)sj='Re: '+rp.subject.replace(/^Re: /,'');
-  const o={uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t};if(sj)o.subject=sj;if(rp)o.re={id:rp.id,name:rp.name,subject:rp.subject||'',text:(rp.text||'').slice(0,100)};
-  $('#tx').value='';$('#sj').value='';rp=null;rb();
-  await DB.add('msgs',o);notify(to=='all'?us.map(x=>x.id):[to],(sj?sj+' - ':'')+'Message from '+U.name,t.slice(0,80),'msg')};
- const rb=()=>{const e=$('#rb');if(!e)return;e.hidden=!rp;e.innerHTML=rp?`<small>Replying to <b>${esc(rp.name)}</b>${rp.subject?' ('+esc(rp.subject)+')':''}: ${esc((rp.text||'').slice(0,80))}</small> <button class="o sm" id="rx">Cancel</button>`:'';if(rp)$('#rx').onclick=()=>{rp=null;rb()}};
- const key=x=>x.id+'|'+lang;
- const doTr=x=>{const k=key(x);if(tr[k])return;tr[k]={w:1};draw();
-  translate(x.text,lang).then(t=>{tr[k]={t}},e=>{tr[k]={err:e.message}}).then(draw)};
- const box=()=>{$('#bx').innerHTML=(to=='cust'?'':'<div id="rb" class="site" hidden></div><input id="sj" maxlength="120" placeholder="Subject (optional)"><div class="r" style="margin-top:6px"><textarea id="tx" rows="2" placeholder="Write a message" style="flex:3"></textarea><button id="go">Send</button></div>')+'<div id="ml"></div>';
-  if(to!='cust'){$('#go').onclick=send;$('#tx').onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey){e.preventDefault();send()}};rb()}draw()};
- const draw=()=>{if(!$('#ml'))return;
-  if(to=='cust'){$('#ml').innerHTML=en.map(x=>{const c=x.contact,l=c.includes('@')?'mailto:'+c:'https://wa.me/'+c.replace(/\D/g,'');
-   return`<hr><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small> ${x.done?'<span class="tag">done</span>':''}<br>${esc(x.text)}<br><small>${esc(c)}</small>
-   <div class="r" style="margin-top:6px"><a href="${l}" target="_blank" rel="noopener"><button class="o" style="width:100%">Reply</button></a>${x.done?'':`<button data-id="${x.id}">Mark done</button>`}</div>`}).join('')||'<p class="m">No customer messages.</p>';
+ const rdK='cc_rd_'+U.id,rd=()=>{try{return new Set(JSON.parse(localStorage.getItem(rdK)||'[]'))}catch(e){return new Set()}},mark=ids=>{const s=rd();ids.forEach(i=>s.add(i));try{localStorage.setItem(rdK,JSON.stringify([...s].slice(-800)))}catch(e){}};
+ const nm=id=>id=='all'?'Whole team':((us.find(u=>u.id==id)||{}).name||'');
+ const sj=x=>x.subject||(x.text||'').replace(/\s+/g,' ').slice(0,45)||'(no subject)';
+ const root=x=>x.thread||x.id,srt=a=>[...a].sort((p,q)=>(q.ts||0)-(p.ts||0)),key=x=>x.id+'|'+lang;
+ const doTr=x=>{const k=key(x);if(tr[k])return;tr[k]={w:1};drawThr();translate(x.text,lang).then(t=>{tr[k]={t}},e=>{tr[k]={err:e.message}}).then(drawThr)};
+ const tabs=()=>`<div class="mtabs"><button data-tb="in" class="${tb=='in'?'on':''}">Inbox</button><button data-tb="out" class="${tb=='out'?'on':''}">Outbox</button>${staff()?`<button data-tb="cu" class="${tb=='cu'?'on':''}">Customers${en.filter(x=>!x.done).length?' ('+en.filter(x=>!x.done).length+')':''}</button>`:''}</div>`;
+ const list=()=>{mode='list';cur=null;v.innerHTML=`<div class="card"><div class="r" style="align-items:center;flex-wrap:nowrap"><h2 style="flex:1;margin:0">Messages</h2><button id="nw" class="fab" title="New message">+</button></div>${tabs()}<div id="ml"></div></div>`;
+  v.querySelectorAll('[data-tb]').forEach(b=>b.onclick=()=>{tb=b.dataset.tb;list()});$('#nw').onclick=compose;drawList()};
+ const drawList=()=>{if(mode!='list'||!$('#ml'))return;
+  v.querySelectorAll('[data-tb]').forEach(b=>{if(b.dataset.tb=='cu')b.textContent='Customers'+(en.filter(x=>!x.done).length?' ('+en.filter(x=>!x.done).length+')':'')});
+  if(tb=='cu'){$('#ml').innerHTML=srt(en).map(x=>{const c=x.contact||'',l=c.includes('@')?'mailto:'+c:'https://wa.me/'+c.replace(/\D/g,'');
+   return`<div class="mrow"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small> ${x.done?'<span class="tag">done</span>':''}<br>${esc(x.text)}<br><small>${esc(c)}</small>
+   <div class="r" style="margin-top:6px"><a href="${l}" target="_blank" rel="noopener"><button class="o" style="width:100%">Reply</button></a>${x.done?'':`<button data-id="${x.id}">Mark done</button>`}</div></div>`}).join('')||'<p class="m">No customer messages.</p>';
    $('#ml').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>DB.upd('enquiries',b.dataset.id,{done:true}));return}
-  const vis=ms.filter(x=>to=='all'?x.to=='all':x.to!='all'&&((x.uid==U.id&&x.to==to)||(x.uid==to&&x.to==U.id))).slice(0,40);
-  $('#ml').innerHTML=vis.map(x=>{const t=tr[key(x)],me=x.uid==U.id;
-   return`<div class="msg ${me?'me':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small><br>${x.re?`<div class="site"><small>Reply to <b>${esc(x.re.name)}</b>${x.re.subject?' ('+esc(x.re.subject)+')':''}: ${esc(x.re.text)}</small></div>`:''}${x.subject?`<b>${esc(x.subject)}</b><br>`:''}${esc(x.text)}
-   <button class="o sm" data-rp="${x.id}" style="margin-top:4px">Reply</button>
-   ${t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`}</div>`}).join('')||'<p class="m">No messages yet.</p>';
-  $('#ml').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(vis.find(x=>x.id==b.dataset.tr)));
-  $('#ml').querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{rp=vis.find(x=>x.id==b.dataset.rp);rb();const t=$('#tx');if(t){t.focus();scrollTo(0,0)}});
-  if(auto)vis.filter(x=>x.uid!=U.id&&!tr[key(x)]).slice(0,12).forEach(doTr)};
- const sel=()=>{$('#to').innerHTML='<option value="all">Whole team</option>'+us.filter(x=>x.id!=U.id&&x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')+(staff()?'<option value="cust">Customer messages</option>':'');$('#to').value=to};
- $('#to').onchange=()=>{to=$('#to').value;box()};
- $('#lg').onchange=()=>{lang=$('#lg').value;localStorage.setItem('cc_lang',lang);draw()};
- $('#au').onchange=()=>{auto=$('#au').checked;localStorage.setItem('cc_auto',auto?'1':'0');draw()};
- live('users',r=>{us=r;sel()});live('msgs',r=>{ms=r;draw()},['members','array-contains-any',['all',U.id]]);
- if(staff())live('enquiries',r=>{en=r;draw()});
- sel();box();
+  const R=srt(tb=='in'?ms.filter(x=>x.uid!=U.id&&(x.to=='all'||x.to==U.id)):ms.filter(x=>x.uid==U.id)).slice(0,60),r=rd();
+  $('#ml').innerHTML=R.map(x=>`<div class="mrow${tb=='in'&&!r.has(x.id)?' un':''}" data-o="${x.id}"><span class="t">${esc(sj(x))}</span><br><small>${tb=='in'?esc(x.name):'To: '+esc(nm(x.to))} &middot; ${fdt(x.ts)}${x.to=='all'?' &middot; whole team':''}</small></div>`).join('')||'<p class="m">No messages.</p>';
+  $('#ml').querySelectorAll('[data-o]').forEach(b=>b.onclick=()=>detail(ms.find(x=>x.id==b.dataset.o)))};
+ const compose=()=>{mode='new';v.innerHTML=`<div class="card"><div class="r" style="align-items:center;flex-wrap:nowrap"><button class="o" id="bk" style="width:auto">Back</button><h2 style="flex:1;margin:0">New message</h2></div>
+  <label>To</label><select id="mt"><option value="all">Whole team</option>${us.filter(x=>x.id!=U.id&&x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')}</select>
+  <label>Subject</label><input id="mj" maxlength="120" placeholder="Subject"><label>Message</label><textarea id="mx" rows="7" placeholder="Write your message"></textarea><p class="e" id="er"></p><button id="sd">Send</button></div>`;
+  $('#bk').onclick=list;$('#mx').focus();
+  $('#sd').onclick=async()=>{const t=$('#mx').value.trim(),to=$('#mt').value,s=$('#mj').value.trim();if(!t){$('#er').textContent='Write a message first.';return}
+   $('#sd').disabled=true;const o={uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t};if(s)o.subject=s;
+   try{await DB.add('msgs',o);notify(to=='all'?us.map(x=>x.id):[to],(s?s+' - ':'')+'Message from '+U.name,t.slice(0,80),'msg');tb='out';list()}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}}};
+ const drawThr=()=>{if(mode!='detail'||!$('#thr')||!cur)return;const rid=root(cur),T=ms.filter(x=>root(x)==rid).sort((a,b)=>(a.ts||0)-(b.ts||0));
+  $('#thr').innerHTML=T.map(x=>{const t=tr[key(x)],me=x.uid==U.id;
+   return`<div class="msg ${me?'me':''}${x.id==cur.id?' cur':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}${x.to!='all'&&me?' &middot; to '+esc(nm(x.to)):''}</small><br>${x.subject?`<b>${esc(x.subject)}</b><br>`:''}${esc(x.text)}
+   ${t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`}</div>`}).join('');
+  $('#thr').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(T.find(x=>x.id==b.dataset.tr)));
+  mark(T.map(x=>x.id));if(auto)T.filter(x=>x.uid!=U.id&&!tr[key(x)]).slice(0,12).forEach(doTr)};
+ const detail=m=>{if(!m)return list();mode='detail';cur=m;const base=(m.subject||'').replace(/^RE:\s*/i,''),t=m.to=='all'?'all':(m.uid==U.id?m.to:m.uid);
+  v.innerHTML=`<div class="card"><div class="r" style="align-items:center;flex-wrap:nowrap"><button class="o" id="bk" style="width:auto">Back</button><b style="flex:1">${esc(sj(m))}</b></div>
+  <div class="r"><div><label>Translate into</label><select id="lg">${Object.entries(LANGS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div><label class="ck" style="flex:1.2;margin-top:24px"><input type="checkbox" id="au">Translate automatically</label></div></div>
+  <div class="card" id="thr"></div>
+  <div class="card"><label>Reply to ${esc(nm(t))}</label><textarea id="rx" rows="3" placeholder="Write a reply"></textarea><p class="e" id="er"></p><button id="sd">Send reply</button></div>`;
+  $('#lg').value=lang;$('#au').checked=auto;$('#bk').onclick=list;
+  $('#lg').onchange=()=>{lang=$('#lg').value;localStorage.setItem('cc_lang',lang);drawThr()};
+  $('#au').onchange=()=>{auto=$('#au').checked;localStorage.setItem('cc_auto',auto?'1':'0');drawThr()};
+  $('#sd').onclick=async()=>{const x=$('#rx').value.trim();if(!x){$('#er').textContent='Write a reply first.';return}$('#sd').disabled=true;
+   const o={uid:U.id,name:U.name,to:t,members:t=='all'?['all']:[U.id,t],text:x,thread:root(m),re:{id:m.id,name:m.name,subject:m.subject||'',text:(m.text||'').slice(0,100)}};if(base)o.subject='RE: '+base;
+   try{await DB.add('msgs',o);notify(t=='all'?us.map(y=>y.id):[t],(o.subject?o.subject+' - ':'')+'Message from '+U.name,x.slice(0,80),'msg');$('#rx').value='';$('#sd').disabled=false}catch(e){$('#er').textContent=e.message;$('#sd').disabled=false}};
+  drawThr();scrollTo(0,0)};
+ live('users',r=>{us=r;drawList()});live('msgs',r=>{ms=r;if(mode=='list')drawList();else drawThr()},['members','array-contains-any',['all',U.id]]);
+ if(staff())live('enquiries',r=>{en=r;drawList()});
+ list();
 }
 
 function items(v){
