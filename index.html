@@ -338,26 +338,26 @@ function clock(v){
 
 // ---- Customers and sites (owner and supervisors) ----
 function customers(v){
- let cu=[],sc=[],pn=[],ed=null,pos=null,lim=40;const t0=dk(Date.now());
+ let cu=[],sc=[],pn=[],ed=null,pos=null,edA='',lim=40;const t0=dk(Date.now());
  v.innerHTML=`<div class="card"><h2 id="ct">New customer or site</h2>
  <label>Name</label><input id="cn"><label>Address</label><input id="ca">
  <div class="r"><div><label>Access code or key info</label><input id="cc"></div><div><label>Contact person and phone</label><input id="cp"></div></div>
  <label>Task checklist (one task per line)</label><textarea id="ck" rows="5" placeholder="Vacuum floors&#10;Clean bathroom&#10;Empty bins"></textarea>
  <label>Notes (pets, parking, special care)</label><textarea id="cm" rows="2"></textarea>
  <label class="ck"><input type="checkbox" id="co2">Our own office or internal work (shown pink in the calendar)</label>
- <div class="r" style="margin-top:10px"><button class="o" id="gp">Save my current position as the site location</button></div><small id="pl">Optional. Stand at the site and tap it. The Clock tab then flags clock-ins made far from the site.</small>
+ <small id="pl">The map location is found automatically from the address when you save. Write street, number and city.</small>
  <p class="e" id="er"></p><div class="r"><button id="sv">Save</button><button class="o" id="cx" hidden>Cancel</button></div></div>
  <div class="card"><h2>Missing visits, next 14 days</h2><small>Repeating schedules that have no shift planned on an expected day, for example because the employee was on leave.</small><div id="gaps"></div></div>
  <div class="card"><b id="cc2">Customers</b><input id="sq" placeholder="Search by name or address" style="margin-top:8px"><div id="l"></div><div id="mo"></div></div><div class="card"><b>Archived</b><div id="ar"></div></div>`;
- const reset=()=>{ed=null;pos=null;$('#ct').textContent='New customer or site';['cn','ca','cc','cp','ck','cm'].forEach(i=>$('#'+i).value='');$('#co2').checked=false;$('#sv').textContent='Save';$('#cx').hidden=true;$('#pl').textContent='Optional. Stand at the site and tap it. The Clock tab then flags clock-ins made far from the site.'};
+ const reset=()=>{ed=null;edA='';pos=null;$('#ct').textContent='New customer or site';['cn','ca','cc','cp','ck','cm'].forEach(i=>$('#'+i).value='');$('#co2').checked=false;$('#sv').textContent='Save';$('#cx').hidden=true;$('#pl').textContent='The map location is found automatically from the address when you save. Write street, number and city.'};
  const draw=()=>{const q=$('#sq').value.trim().toLowerCase(),A=cu.filter(c=>c.active!==false&&(!q||(c.name+' '+c.addr).toLowerCase().includes(q))).sort((a,b)=>a.name.localeCompare(b.name)),L=A.slice(0,lim);
   $('#cc2').textContent='Customers ('+cu.filter(c=>c.active!==false).length+')';
   $('#l').innerHTML=L.map(c=>`<hr><b>${esc(c.name)}</b>${c.lat?' <span class="tag">located</span>':''}<br><small>${esc(c.addr)}${c.code?' | Access: '+esc(c.code):''}${(c.tasks||[]).length?' | '+c.tasks.length+' tasks':''}</small>
    <div class="r" style="margin-top:6px"><button class="o sm" data-ce="${c.id}">Edit</button><button class="d sm" data-ca="${c.id}">Archive</button></div>`).join('')||'<p class="m">No customers yet.</p>';
   $('#mo').innerHTML=A.length>lim?`<hr><button class="o sm" id="more">Show more (${A.length-lim} left)</button>`:'';if($('#more'))$('#more').onclick=()=>{lim+=40;draw()};
   $('#ar').innerHTML=cu.filter(c=>c.active===false).map(c=>`<hr>${esc(c.name)} <button class="o sm" data-cr="${c.id}">Restore</button>`).join('')||'<p class="m">None.</p>';
-  v.querySelectorAll('[data-ce]').forEach(b=>b.onclick=()=>{const c=cu.find(x=>x.id==b.dataset.ce);ed=c.id;pos=c.lat?{lat:c.lat,lng:c.lng}:null;$('#ct').textContent='Edit customer';$('#cn').value=c.name;$('#ca').value=c.addr;$('#cc').value=c.code||'';$('#cp').value=c.contact||'';
-   $('#ck').value=(c.tasks||[]).join('\n');$('#cm').value=c.notes||'';$('#co2').checked=!!c.office;$('#sv').textContent='Save changes';$('#cx').hidden=false;$('#pl').textContent=pos?'Site location saved.':'No site location yet.';scrollTo(0,0)});
+  v.querySelectorAll('[data-ce]').forEach(b=>b.onclick=()=>{const c=cu.find(x=>x.id==b.dataset.ce);ed=c.id;edA=c.addr||'';pos=c.lat?{lat:c.lat,lng:c.lng}:null;$('#ct').textContent='Edit customer';$('#cn').value=c.name;$('#ca').value=c.addr;$('#cc').value=c.code||'';$('#cp').value=c.contact||'';
+   $('#ck').value=(c.tasks||[]).join('\n');$('#cm').value=c.notes||'';$('#co2').checked=!!c.office;$('#sv').textContent='Save changes';$('#cx').hidden=false;$('#pl').textContent=pos?'Map location saved. It updates if you change the address.':'No map location yet. It is found when you save.';scrollTo(0,0)});
   v.querySelectorAll('[data-ca]').forEach(b=>b.onclick=async()=>{if(!confirm('Archive this customer? Shifts already planned stay.'))return;const c=cu.find(x=>x.id==b.dataset.ca);await DB.upd('customers',c.id,{active:false});await DB.put('places',c.id,{name:c.name,active:false})});
   v.querySelectorAll('[data-cr]').forEach(b=>b.onclick=async()=>{const c=cu.find(x=>x.id==b.dataset.cr);await DB.upd('customers',c.id,{active:true});await DB.put('places',c.id,{name:c.name,active:true})});
   // missing visits
@@ -368,14 +368,15 @@ function customers(v){
    await DB.add('plans',{uid:'',name:'Open shift',open:true,pub:true,place:g.s.place,date:g.k,start:g.s.start,end:g.s.end,schedId:g.s.id,siteId:g.s.siteId||'',site:snap(c)});
    notify(await allIds(),'Open shift available',g.k+' '+g.s.start+'-'+g.s.end+' '+g.s.place,'shifts')})};
  $('#sq').oninput=()=>{lim=40;draw()};$('#cx').onclick=reset;
- $('#gp').onclick=()=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>{pos={lat:+p.coords.latitude.toFixed(5),lng:+p.coords.longitude.toFixed(5)};$('#pl').textContent='Location captured. Tap Save to keep it.'},()=>{$('#pl').textContent='Could not read your location. Allow location access and try again.'},{enableHighAccuracy:true,timeout:15000}):0;
+ const geo=async q=>{for(const cc of ['&countrycodes=fi','']){try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1'+cc+'&q='+encodeURIComponent(q));const j=await r.json();if(j&&j[0])return{lat:+(+j[0].lat).toFixed(5),lng:+(+j[0].lon).toFixed(5)}}catch(e){}}return null};
  $('#sv').onclick=async()=>{const n=$('#cn').value.trim(),a=$('#ca').value.trim();if(!n||!a){$('#er').textContent='Enter the name and address.';return}
+  let found=true;if(!pos||a!=edA){$('#sv').disabled=true;$('#pl').textContent='Finding the address on the map...';pos=await geo(a);found=!!pos;$('#sv').disabled=false}
   const o={name:n,addr:a,code:$('#cc').value.trim(),contact:$('#cp').value.trim(),tasks:$('#ck').value.split('\n').map(x=>x.trim()).filter(Boolean),notes:$('#cm').value.trim(),office:$('#co2').checked,lat:pos?pos.lat:null,lng:pos?pos.lng:null,active:true};
   if(ed){const id=ed;await DB.upd('customers',id,o);audit('customers',id,'edited',n);await DB.put('places',id,{name:n,active:true});
    for(const p of (await DB.list('plans',['siteId','==',id])).filter(p=>p.date>=t0))await DB.upd('plans',p.id,{place:n,site:snap(o)});
    for(const s of sc.filter(s=>s.siteId==id))await DB.upd('schedules',s.id,{place:n})}
   else{const id=await DB.add('customers',o);await DB.put('places',id,{name:n,active:true})}
-  reset();$('#er').textContent='Saved. Planned shifts for this customer were updated.'};
+  reset();$('#er').textContent=found?'Saved. The location was found from the address.':'Saved, but the address was not found on the map, so the clock-in distance check is off. Edit the address (street, number, city) to try again.'};
  live('customers',r=>{cu=r;draw()});live('schedules',r=>{sc=r;draw()});live('plans',r=>{pn=r;draw()},[['date','>=',t0],['date','<=',addD(t0,13)]]);
 }
 
