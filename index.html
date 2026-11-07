@@ -760,20 +760,23 @@ async function translate(text,to){
  const r=await fetch('https://api.mymemory.translated.net/get?q='+encodeURIComponent(text.slice(0,450))+'&langpair=Autodetect|'+to),j=await r.json(),t=j.responseData&&j.responseData.translatedText;
  if(!t||/MYMEMORY WARNING|INVALID/i.test(t))throw Error('The translation service is busy or unavailable.');return t}
 function msgs(v){
- let us=[],ms=[],en=[],to='all',lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
+ let us=[],ms=[],en=[],to='all',rp=null,lang=localStorage.getItem('cc_lang')||(navigator.language||'en').slice(0,2),auto=localStorage.getItem('cc_auto')=='1';
  if(!LANGS[lang])lang='en';const tr={};
  v.innerHTML=`<div class="card"><label>Chat with</label><select id="to"></select>
   <div class="r"><div><label>Translate into</label><select id="lg">${Object.entries(LANGS).map(([k,n])=>`<option value="${k}">${n}</option>`).join('')}</select></div>
   <label class="ck" style="flex:1.2;margin-top:24px"><input type="checkbox" id="au">Translate automatically</label></div>
   <small>Uses your browser's on-device translator when it has one. Otherwise the message text is sent to a free online translation service.</small></div><div class="card" id="bx"></div>`;
  $('#lg').value=lang;$('#au').checked=auto;
- const send=async()=>{const t=$('#tx').value.trim();if(!t)return;$('#tx').value='';
-  await DB.add('msgs',{uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t});notify(to=='all'?us.map(x=>x.id):[to],'Message from '+U.name,t.slice(0,80),'msg')};
+ const send=async()=>{const t=$('#tx').value.trim();if(!t)return;let sj=$('#sj').value.trim().slice(0,120);if(!sj&&rp&&rp.subject)sj='Re: '+rp.subject.replace(/^Re: /,'');
+  const o={uid:U.id,name:U.name,to,members:to=='all'?['all']:[U.id,to],text:t};if(sj)o.subject=sj;if(rp)o.re={id:rp.id,name:rp.name,subject:rp.subject||'',text:(rp.text||'').slice(0,100)};
+  $('#tx').value='';$('#sj').value='';rp=null;rb();
+  await DB.add('msgs',o);notify(to=='all'?us.map(x=>x.id):[to],(sj?sj+' - ':'')+'Message from '+U.name,t.slice(0,80),'msg')};
+ const rb=()=>{const e=$('#rb');if(!e)return;e.hidden=!rp;e.innerHTML=rp?`<small>Replying to <b>${esc(rp.name)}</b>${rp.subject?' ('+esc(rp.subject)+')':''}: ${esc((rp.text||'').slice(0,80))}</small> <button class="o sm" id="rx">Cancel</button>`:'';if(rp)$('#rx').onclick=()=>{rp=null;rb()}};
  const key=x=>x.id+'|'+lang;
  const doTr=x=>{const k=key(x);if(tr[k])return;tr[k]={w:1};draw();
   translate(x.text,lang).then(t=>{tr[k]={t}},e=>{tr[k]={err:e.message}}).then(draw)};
- const box=()=>{$('#bx').innerHTML=(to=='cust'?'':'<div class="r"><input id="tx" placeholder="Write a message" style="flex:3"><button id="go">Send</button></div>')+'<div id="ml"></div>';
-  if(to!='cust'){$('#go').onclick=send;$('#tx').onkeydown=e=>e.key=='Enter'&&send()}draw()};
+ const box=()=>{$('#bx').innerHTML=(to=='cust'?'':'<div id="rb" class="site" hidden></div><input id="sj" maxlength="120" placeholder="Subject (optional)"><div class="r" style="margin-top:6px"><textarea id="tx" rows="2" placeholder="Write a message" style="flex:3"></textarea><button id="go">Send</button></div>')+'<div id="ml"></div>';
+  if(to!='cust'){$('#go').onclick=send;$('#tx').onkeydown=e=>{if(e.key=='Enter'&&!e.shiftKey){e.preventDefault();send()}};rb()}draw()};
  const draw=()=>{if(!$('#ml'))return;
   if(to=='cust'){$('#ml').innerHTML=en.map(x=>{const c=x.contact,l=c.includes('@')?'mailto:'+c:'https://wa.me/'+c.replace(/\D/g,'');
    return`<hr><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small> ${x.done?'<span class="tag">done</span>':''}<br>${esc(x.text)}<br><small>${esc(c)}</small>
@@ -781,9 +784,11 @@ function msgs(v){
    $('#ml').querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>DB.upd('enquiries',b.dataset.id,{done:true}));return}
   const vis=ms.filter(x=>to=='all'?x.to=='all':x.to!='all'&&((x.uid==U.id&&x.to==to)||(x.uid==to&&x.to==U.id))).slice(0,40);
   $('#ml').innerHTML=vis.map(x=>{const t=tr[key(x)],me=x.uid==U.id;
-   return`<div class="msg ${me?'me':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small><br>${esc(x.text)}
+   return`<div class="msg ${me?'me':''}"><b>${esc(x.name)}</b> <small>${fdt(x.ts)}</small><br>${x.re?`<div class="site"><small>Reply to <b>${esc(x.re.name)}</b>${x.re.subject?' ('+esc(x.re.subject)+')':''}: ${esc(x.re.text)}</small></div>`:''}${x.subject?`<b>${esc(x.subject)}</b><br>`:''}${esc(x.text)}
+   <button class="o sm" data-rp="${x.id}" style="margin-top:4px">Reply</button>
    ${t?`<div class="tl">${t.w?'<small>Translating...</small>':t.err?`<span class="e">${esc(t.err)}</span> <a target="_blank" rel="noopener" href="https://translate.google.com/?sl=auto&tl=${lang}&text=${encodeURIComponent(x.text)}">Open in Google Translate</a>`:esc(t.t)}</div>`:`<button class="o sm" data-tr="${x.id}" style="margin-top:4px">Translate</button>`}</div>`}).join('')||'<p class="m">No messages yet.</p>';
   $('#ml').querySelectorAll('[data-tr]').forEach(b=>b.onclick=()=>doTr(vis.find(x=>x.id==b.dataset.tr)));
+  $('#ml').querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{rp=vis.find(x=>x.id==b.dataset.rp);rb();const t=$('#tx');if(t){t.focus();scrollTo(0,0)}});
   if(auto)vis.filter(x=>x.uid!=U.id&&!tr[key(x)]).slice(0,12).forEach(doTr)};
  const sel=()=>{$('#to').innerHTML='<option value="all">Whole team</option>'+us.filter(x=>x.id!=U.id&&x.active!==false).map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join('')+(staff()?'<option value="cust">Customer messages</option>':'');$('#to').value=to};
  $('#to').onchange=()=>{to=$('#to').value;box()};
