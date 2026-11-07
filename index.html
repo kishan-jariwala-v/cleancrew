@@ -78,7 +78,7 @@ const fdur=ms=>{const m=Math.round(ms/60000);return Math.floor(m/60)+'h '+String
 const fsg=ms=>(ms<0?'-':'+')+fdur(Math.abs(ms));
 const mins=s=>{const[a,b]=s.split(':');return a*60+ +b};
 const eur=n=>new Intl.NumberFormat('fi-FI',{style:'currency',currency:'EUR'}).format(n||0);
-const DEF={rates:{regular:2.5,deep:4.5,moveout:5},freq:{once:1,weekly:.85,biweekly:.9,monthly:.95},extras:{Windows:40,Oven:25,Fridge:20},min:60,vat:25.5,phone:'',catalog:['Gloves','Cloths','Cleaning spray','Trash bags','Mop head'],pay:{day:8,week:40,eveS:18,eveE:22,nightS:22,nightE:6,eves:true}};
+const DEF={rates:{regular:2.5,deep:4.5,moveout:5},freq:{once:1,weekly:.85,biweekly:.9,monthly:.95},extras:{Window:8,Oven:25,Fridge:20,Freezer:20,Microwave:10,Dishwasher:15,'Kitchen cupboards (inside)':20,Balcony:30,'Extra bathroom':25,Sauna:40,'Carpet cleaning (per room)':35},min:60,vat:25.5,phone:'',catalog:['Gloves','Cloths','Cleaning spray','Trash bags','Mop head'],pay:{day:8,week:40,eveS:18,eveE:22,nightS:22,nightE:6,eves:true}};
 const snap=c=>c?{name:c.name,addr:c.addr||'',code:c.code||'',contact:c.contact||'',tasks:c.tasks||[],notes:c.notes||'',lat:c.lat||null,lng:c.lng||null,office:!!c.office}:null;
 const dist=(a,b)=>{const R=6371e3,r=x=>x*Math.PI/180,p=r(b.lat-a.lat),q=r(b.lng-a.lng),h=Math.sin(p/2)**2+Math.cos(r(a.lat))*Math.cos(r(b.lat))*Math.sin(q/2)**2;return Math.round(2*R*Math.asin(Math.sqrt(h)))};
 // Finnish public holidays (computed, any year). eve=true: Christmas Eve and Midsummer Eve (treated as holidays by many agreements)
@@ -253,18 +253,19 @@ function quote(v){
  <label>Service</label><select id="sv">${Object.keys(R).map(k=>`<option value="${k}">${nm(k)} cleaning</option>`).join('')}</select>
  <label>Home size (m²)</label><input id="m2" type="number" min="10" value="50">
  <label>How often</label><select id="fq">${Object.keys(S.freq).map(k=>`<option>${k}</option>`).join('')}</select>
- <label>Extras</label>${Object.entries(S.extras).map(([k,p])=>`<label class="ck"><input type="checkbox" class="ex" value="${p}"> ${esc(k)} (+€${p})</label>`).join('')}
+ <label>Extras (how many?)</label>${Object.entries(S.extras).map(([k,p])=>`<div class="r" style="flex-wrap:nowrap;align-items:center;margin:4px 0"><span style="flex:1">${esc(k)} <small class="m">+€${p} each</small></span><input type="number" class="ex" data-n="${esc(k)}" value="0" min="0" max="99" step="1" style="width:80px;flex:none"></div>`).join('')}
  <hr><div class="big" id="pr"></div><small id="sb"></small>${S.phone?'<p><a id="wa" target="_blank" rel="noopener">Send this enquiry on WhatsApp</a></p>':''}</div>
- <div class="card"><h2>Message us</h2><label>Your name</label><input id="qn"><label>Phone or email</label><input id="qc"><label>Message</label><textarea id="qt" rows="3"></textarea>
+ <div class="card"><h2>Message us</h2><label>Your name</label><input id="qn"><label>Phone or email</label><input id="qc"><label>Message</label><textarea id="qt" rows="3" maxlength="800"></textarea>
  <p class="m" id="qr"></p><button id="qs">Send</button></div>`;
- const calc=()=>{const m2=+$('#m2').value||0,fq=$('#fq').value,ex=[...v.querySelectorAll('.ex')].reduce((a,x)=>a+(x.checked?+x.value:0),0);
+ const exTxt=()=>[...v.querySelectorAll('.ex')].filter(x=>+x.value>0).map(x=>(+x.value)+' x '+x.dataset.n).join(', ');
+ const calc=()=>{const m2=+$('#m2').value||0,fq=$('#fq').value,ex=[...v.querySelectorAll('.ex')].reduce((a,x)=>a+Math.max(0,Math.floor(+x.value||0))*(S.extras[x.dataset.n]||0),0);
   const net=Math.max(S.min,R[$('#sv').value]*m2*S.freq[fq])+ex,gross=net*(1+S.vat/100);
   $('#pr').textContent='€'+gross.toFixed(2);$('#sb').textContent=`per visit, incl. VAT ${S.vat}%. Estimate only.`;
-  if(S.phone)$('#wa').href='https://wa.me/'+S.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(`Hi, I'd like a quote: ${nm($('#sv').value)} cleaning, ${m2} m², ${fq}. Estimate €${gross.toFixed(0)}.`)};
+  if(S.phone)$('#wa').href='https://wa.me/'+S.phone.replace(/\D/g,'')+'?text='+encodeURIComponent(`Hi, I'd like a quote: ${nm($('#sv').value)} cleaning, ${m2} m², ${fq}${exTxt()?', extras: '+exTxt():''}. Estimate €${gross.toFixed(0)}.`)};
  v.querySelectorAll('#sv,#m2,#fq,.ex').forEach(x=>x.oninput=calc);calc();
  $('#qs').onclick=async()=>{const n=$('#qn').value.trim(),c=$('#qc').value.trim(),t=$('#qt').value.trim();
   if(!n||!c||!t){$('#qr').textContent='Please fill in all three fields.';return}
-  try{await DB.add('enquiries',{name:n,contact:c,text:t,done:false});$('#qr').textContent='Sent. We will contact you soon.';$('#qt').value=''}catch(e){$('#qr').textContent='Could not send. Please try again.'}};
+  try{await DB.add('enquiries',{name:n,contact:c,text:t+'\n[Quote: '+nm($('#sv').value)+' cleaning, '+($('#m2').value||0)+' m2, '+$('#fq').value+(exTxt()?', extras: '+exTxt():'')+', estimate '+$('#pr').textContent+']',done:false});$('#qr').textContent='Sent. We will contact you soon.';$('#qt').value=''}catch(e){$('#qr').textContent='Could not send. Please try again.'}};
 }
 
 function clock(v){
@@ -1009,7 +1010,7 @@ function settings(v){
  v.innerHTML=`<div class="card"><h2>Settings</h2><small>Prices shown on the public quote page.</small>
  ${Object.keys(S.rates).map(k=>`<label>${k} (€ per m²)</label><input class="rt" data-k="${k}" type="number" step="0.1" value="${S.rates[k]}">`).join('')}
  <div class="r"><div><label>Minimum price (€)</label><input id="mn" type="number" value="${S.min}"></div><div><label>VAT %</label><input id="vt" type="number" step="0.1" value="${S.vat}"></div></div>
- <label>Quote extras (one per line: Name=price)</label><textarea id="ex" rows="3">${Object.entries(S.extras).map(([k,p])=>k+'='+p).join('\n')}</textarea>
+ <label>Quote extras (one per line: Name=price for each one)</label><textarea id="ex" rows="8">${Object.entries(S.extras).map(([k,p])=>k+'='+p).join('\n')}</textarea>
  <label>Item list for employees (one per line)</label><textarea id="ct" rows="4">${S.catalog.map(esc).join('\n')}</textarea>
  <label>WhatsApp number with country code (optional)</label><input id="ph" value="${esc(S.phone)}" placeholder="358401234567">
  <hr><h2>Payroll hours rules</h2><small>Used only in the Payroll hours report. Set them from your collective agreement and check them with your accountant.</small>
