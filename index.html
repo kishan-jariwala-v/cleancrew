@@ -223,10 +223,15 @@ function stopTrack(){trk&&trk();trk=null;gid!=null&&navigator.geolocation.clearW
 
 // In-app inbox + toast. Phone (push) notifications are sent by the Cloud Function in SETUP.md.
 const toast=m=>{const t=$('#toast');if(!t)return;t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,6000)};
-const bell=()=>{const b=$('#bell');if(b)b.textContent='Alerts'+(inbox.length?' ('+inbox.length+')':'')};
+const bell=()=>{try{if(!inbox.length&&navigator.clearAppBadge)navigator.clearAppBadge()}catch(e){}const b=$('#bell');if(b)b.textContent='Alerts'+(inbox.length?' ('+inbox.length+')':'')};
 function startNotif(){stopNotif();nu=DB.watch('notifs',r=>{inbox=r;
  if(seen===null){seen=new Set(r.map(x=>x.id));r.filter(x=>Date.now()-x.ts>5*864e5).forEach(x=>DB.purge('notifs',x.id))}
- else{const n=r.filter(x=>!seen.has(x.id));n.forEach(x=>seen.add(x.id));if(n.length)toast(n[0].title+': '+n[0].body)}bell();if(tab=='msg')r.filter(x=>x.tab=='msg').forEach(x=>DB.purge('notifs',x.id))},['to','==',U.id])}
+ else{const n=r.filter(x=>!seen.has(x.id));n.forEach(x=>seen.add(x.id));if(n.length){toast(n[0].title+': '+n[0].body);localAlert(n)}}bell();if(tab=='msg')r.filter(x=>x.tab=='msg').forEach(x=>DB.purge('notifs',x.id))},['to','==',U.id])}
+// Alert on this device while the app is open or in the background. Skipped when real push is set up, so nobody gets two.
+function localAlert(n){try{if(navigator.vibrate)navigator.vibrate([200,100,200])}catch(e){}
+ try{if(navigator.setAppBadge)navigator.setAppBadge(inbox.length||1)}catch(e){}
+ if(VAPID_KEY||!document.hidden||!('Notification' in window)||Notification.permission!='granted'||!navigator.serviceWorker)return;
+ navigator.serviceWorker.ready.then(r=>r.showNotification(n[0].title,{body:n[0].body,icon:'icon-192.png',badge:'icon-192.png',tag:'cc-'+n[0].id,data:{tab:n[0].tab||''}})).catch(()=>{})}
 function stopNotif(){nu&&nu();nu=null;seen=null;inbox=[]}
 async function notify(ids,title,body,tab){const L=[...new Set(ids)].filter(x=>x&&x!=U.id);
  await Promise.all(L.map(to=>DB.add('notifs',{to,title,body,tab:tab||'',from:U.id},1).catch(()=>{})))}
@@ -738,13 +743,14 @@ function consentView(v){
 function inboxTab(v){
  v.innerHTML=`<div class="card"><h2>Phone notifications</h2><p class="m" id="pm"></p><button id="pn">Turn on notifications on this phone</button></div>
  <div class="card"><div class="r"><b>Alerts</b><button class="o sm" id="cl">Clear all</button></div><div id="il"></div></div>`;
- $('#pm').textContent=('Notification' in window&&Notification.permission=='granted')?'Permission is granted on this phone. Press the button once after each login to make sure this phone is registered.':'New shifts, changes and messages can reach your phone even when the app is closed.';
+ $('#pm').textContent=('Notification' in window&&Notification.permission=='granted')?'Permission is granted on this phone. Press the button once after each login to make sure this phone is registered.':'Turn on notifications to get alerts for new shifts and messages.';
  const draw=()=>{$('#il').innerHTML=inbox.map(x=>`<hr><b>${esc(x.title)}</b> <small>${fdt(x.ts)}</small><br>${esc(x.body)}${x.tab?` <button class="o sm" data-go="${x.tab}">Open</button>`:''}`).join('')||'<p class="m">No notifications.</p>';
   v.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render()})};
  live('notifs',r=>{inbox=r;draw();bell()},['to','==',U.id]);
  $('#cl').onclick=()=>inbox.forEach(x=>DB.purge('notifs',x.id));
  $('#pn').onclick=async()=>{try{
-  if(!VAPID_KEY)throw Error('Phone notifications are not configured yet. See SETUP.md section 3d.');
+  if(!VAPID_KEY){if(!('Notification' in window))throw Error('This browser does not support notifications. On iPhone, add the app to the Home Screen first.');
+   const pr=await Notification.requestPermission();$('#pm').textContent=pr=='granted'?'Alerts are on. You get a notification while the app is open or in the background. To reach a closed app, the owner must finish push setup (SETUP.md section 3d).':'Notifications are blocked. Allow them in the browser or phone settings for this app.';return}
   if(!('Notification' in window))throw Error('This browser cannot show notifications. On iPhone, add the app to the Home Screen first.');
   if(await Notification.requestPermission()!='granted')throw Error('Notifications are blocked. Allow them in the browser or phone settings.');
   await DB.pushOn(VAPID_KEY);$('#pm').textContent='Notifications are on for this phone.'}catch(e){$('#pm').textContent=e.message}};
