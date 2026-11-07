@@ -54,7 +54,14 @@ details summary{cursor:pointer;color:var(--a);font-weight:600;font-size:.9rem}
 <main><div id="off" class="card e" hidden><small>You are offline. Clock in, clock out and edits are saved on this phone and sync when the signal returns.</small></div><div id="demo"></div><div id="view"></div></main><nav id="nav"></nav>
 <script type="module">
 // ===== 1. Paste your Firebase config here (see SETUP.md). Leave null for single-device demo mode. =====
-const FIREBASE_CONFIG = null;
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDwg7s-Dhu7tgeOtlf9P5C6cNj4H60Kpcw",
+  authDomain: "cleancrew-a57ba.firebaseapp.com",
+  projectId: "cleancrew-a57ba",
+  storageBucket: "cleancrew-a57ba.firebasestorage.app",
+  messagingSenderId: "764888316230",
+  appId: "1:764888316230:web:4e14da8a272987bf9bcd47"
+};
 // ===== Optional: Web Push key pair from Firebase > Project settings > Cloud Messaging (see SETUP.md 3d). Leave null if you do not use phone notifications. =====
 const VAPID_KEY = null;
 
