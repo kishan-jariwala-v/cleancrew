@@ -187,7 +187,7 @@ function render(){
  un.forEach(f=>f());un=[];
  $('#demo').innerHTML=DB.demo?'<p class="card e"><small>Demo mode: data stays on this device only. Add your Firebase config (SETUP.md) to share between phones.</small></p>':'';
  $('#who').innerHTML=U?`<span class="who">${esc(U.name)} <span class="tag">${U.role}</span></span><button class="o sm" id="bell">Inbox</button><button class="o sm" id="lo">Log out</button>`:'<button class="sm" id="li">Staff login</button>';
- const all=MODS.filter(can),ms=all.filter(m=>!m.hid);if(tab!='auth'&&!all.some(m=>m.id==tab))tab='quote';
+ const all=MODS.filter(can),ms=all.filter(m=>!m.hid);if(tab!='auth'&&!all.some(m=>m.id==tab))tab=U?'clock':'auth';
  $('#nav').innerHTML=ms.map(m=>`<button class="${m.id==tab?'on':''}" data-t="${m.id}">${ic(m.i)}<span>${m.t}</span></button>`).join('');
  const v=$('#view');v.innerHTML='';
  if(U&&consent===false&&tab!='auth'){consentView(v);return}
@@ -198,7 +198,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
  if(b.dataset.t){tab=b.dataset.t;render()}
  if(b.id=='li'){tab='auth';render()}
  if(b.id=='bell'){tab='inbox';render()}
- if(b.id=='lo'){stopTrack();DB.logout().then(()=>{U=null;tab='quote';render()})}});
+ if(b.id=='lo'){stopTrack();DB.logout().then(()=>{U=null;tab='auth';render()})}});
 
 // Live location: runs while a shift is open. A web app cannot read the GPS with the screen off, so the app keeps the screen awake,
 // saves a route point every 5 minutes, and tells supervisors when the app went to the background.
@@ -237,7 +237,9 @@ async function auth(v){
  ${up?'<label>Your name</label><input id="n"><label>Phone</label><input id="ph" type="tel">':''}<label>Email</label><input id="em" type="email" autocomplete="username"><label>Password</label><input id="pw" type="password" autocomplete="current-password">
  <p class="e" id="er"></p><button id="go">${up?'Create owner account':'Log in'}</button>
  ${up?'':'<p><a href="#" id="fg">Forgot password?</a></p>'}${first&&!up?'<p><a href="#" id="su">First time? Set up the owner account</a></p>':''}
- <small>Accounts are created by the owner. Log in with the email and password you were given.</small></div>`;
+ <small>Accounts are created by the owner. Log in with the email and password you were given.</small>
+ <p style="margin-top:12px"><a href="#" id="gq">Customer? Get a price estimate</a></p></div>`;
+ if($('#gq'))$('#gq').onclick=e=>{e.preventDefault();tab='quote';render()};
  const er=(m,ok)=>{$('#er').className=ok?'m':'e';$('#er').textContent=m};
  if($('#su'))$('#su').onclick=e=>{e.preventDefault();up=true;draw()};
  if($('#fg'))$('#fg').onclick=async e=>{e.preventDefault();const em=$('#em').value.trim();if(!em){er('Type your email above first.');return}
@@ -718,7 +720,7 @@ function consentView(v){
  <div class="r"><button id="cgo">Continue</button><button class="o" id="clo">Log out</button></div></div>`;
  $('#cgo').onclick=async()=>{if(!$('#cok').checked){$('#er').textContent='Tick the box to continue.';return}
   try{await DB.add('consents',{uid:U.id,name:U.name,version:CONSENT_V});consent=true;render()}catch(e){$('#er').textContent=e.message}};
- $('#clo').onclick=()=>{stopTrack();DB.logout().then(()=>{U=null;tab='quote';render()})};
+ $('#clo').onclick=()=>{stopTrack();DB.logout().then(()=>{U=null;tab='auth';render()})};
 }
 
 // ---- Inbox and phone notifications ----
@@ -1031,7 +1033,7 @@ function settings(v){
  catch(e){DB=wrapDB(localDB());U=await DB.cur();S=DEF;console.error(e)}
  const m=location.hash.match(/^#\/v\/([a-z0-9]+)$/);if(m){publicView(m[1]);return}
  const off=()=>{const o=$('#off');if(o)o.hidden=navigator.onLine!==false};addEventListener('online',off);addEventListener('offline',off);off();
- if(U)startTrack();render();
+ tab=U?'clock':'auth';if(U)startTrack();render();
 })();
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script></body></html>
