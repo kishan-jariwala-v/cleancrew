@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>CleanCrew</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b6e7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CleanCrew"><link rel="apple-touch-icon" href="icon-192.png">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>SiivousNinjat Oy</title><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0b6e7a"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="SiivousNinjat"><link rel="apple-touch-icon" href="icon-192.png">
 <style>
 :root{--bg:#f1f4f6;--c:#fff;--ink:#0f2230;--m:#5a6b78;--l:#d9e1e7;--a:#0b6e7a;--ai:#fff;--as:#dff1f3;--w:#b4430f;--ok:#1b7a4b;--r:14px}
 @media(prefers-color-scheme:dark){:root{--bg:#0c161d;--c:#14232d;--ink:#e7eff4;--m:#93a6b3;--l:#263a47;--a:#4cc3d0;--ai:#05222a;--as:#173a43;--w:#f2a272;--ok:#5fd29a}}
@@ -49,7 +49,7 @@ details summary{cursor:pointer;color:var(--a);font-weight:600;font-size:.9rem}
  #nav button{flex-direction:row;gap:12px;min-width:0;width:100%;font-size:.92rem;padding:11px 12px}
 }
 #wfm:not([hidden]){position:fixed;left:50%;top:5vh;transform:translateX(-50%);width:min(560px,94vw);max-height:88vh;overflow:auto;z-index:60;box-shadow:0 0 0 100vmax rgba(0,0,0,.5)}#wmb{position:sticky;top:0;z-index:20;max-height:55vh;overflow:auto;border:2px solid #b24a0e}#wact{position:sticky;top:0;z-index:20;max-height:50vh;overflow:auto;border:2px solid var(--pr,#0b6e7a)}.lcal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}.lcal>div{min-height:54px;border:1px solid var(--ln,#ddd);border-radius:6px;padding:2px;font-size:.7rem;overflow:hidden}.lcal .h{min-height:0;border:0;text-align:center;font-weight:600}.lcal .lt{display:block;background:var(--as);border-radius:4px;margin-top:2px;padding:0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lcal .lt.pn{opacity:.6;border:1px dashed currentColor}.lcal .td{outline:2px solid #0b6e7a}.lcal .ho{background:#fff4d6}</style></head><body>
-<header><div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 8.8"/></svg><b>CleanCrew</b></div><div id="who" class="r"></div></header>
+<header><div class="brand"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 12.5l3.2 3.2L17 8.8"/></svg><b>SiivousNinjat Oy</b></div><div id="who" class="r"></div></header>
 <div id="toast" class="card" hidden style="position:fixed;top:60px;left:12px;right:12px;z-index:9;max-width:520px;margin:auto;border-color:var(--a)"></div>
 <main><div id="off" class="card e" hidden><small>You are offline. Clock in, clock out and edits are saved on this phone and sync when the signal returns.</small></div><div id="demo"></div><div id="view"></div></main><nav id="nav"></nav>
 <script type="module">
@@ -725,8 +725,8 @@ function records(v){
 const CONSENT_V=1;
 function consentView(v){
  v.innerHTML=`<div class="card"><h2>Location and work-time records</h2>
- <p>While you are clocked in, CleanCrew saves your location when you clock in and out and about every 5 minutes, and shows it to your supervisors and the owner. It is used to check working hours and for safety. Your location is not recorded when you are clocked out. Work-time records are kept as the employer's records. You can withdraw your consent by telling your employer.</p>
- <p>Kun olet kirjautunut sisään, CleanCrew tallentaa sijaintisi sisään- ja uloskirjautuessasi sekä noin 5 minuutin välein ja näyttää sen esimiehille ja omistajalle. Tietoja käytetään työajan seurantaan ja turvallisuuteen. Sijaintiasi ei tallenneta, kun olet kirjautunut ulos. Työaikatiedot säilytetään työnantajan kirjanpitoa varten. Voit peruuttaa suostumuksesi ilmoittamalla siitä työnantajalle.</p>
+ <p>While you are clocked in, SiivousNinjat Oy saves your location when you clock in and out and about every 5 minutes, and shows it to your supervisors and the owner. It is used to check working hours and for safety. Your location is not recorded when you are clocked out. Work-time records are kept as the employer's records. You can withdraw your consent by telling your employer.</p>
+ <p>Kun olet kirjautunut sisään, SiivousNinjat Oy tallentaa sijaintisi sisään- ja uloskirjautuessasi sekä noin 5 minuutin välein ja näyttää sen esimiehille ja omistajalle. Tietoja käytetään työajan seurantaan ja turvallisuuteen. Sijaintiasi ei tallenneta, kun olet kirjautunut ulos. Työaikatiedot säilytetään työnantajan kirjanpitoa varten. Voit peruuttaa suostumuksesi ilmoittamalla siitä työnantajalle.</p>
  <label class="ck"><input type="checkbox" id="cok">I agree / Hyväksyn</label><p class="e" id="er"></p>
  <div class="r"><button id="cgo">Continue</button><button class="o" id="clo">Log out</button></div></div>`;
  $('#cgo').onclick=async()=>{if(!$('#cok').checked){$('#er').textContent='Tick the box to continue.';return}

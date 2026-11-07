@@ -11,6 +11,6 @@ self.addEventListener('fetch',e=>{
   e.respondWith(fetch(r.url,{cache:'no-cache'}).then(x=>{const k=x.clone();caches.open(C).then(c=>c.put(r.mode=='navigate'?'./index.html':r,k));return x}).catch(()=>caches.match(r.mode=='navigate'?'./index.html':r)))}});
 // Phone notifications (sent by the Cloud Function in SETUP.md)
 self.addEventListener('push',e=>{let d={};try{const j=e.data.json();d=j.data||j.notification||j}catch(x){}
- e.waitUntil(self.registration.showNotification(d.title||'CleanCrew',{body:d.body||'',icon:'icon-192.png',badge:'icon-192.png',data:{tab:d.tab||''}}))});
+ e.waitUntil(self.registration.showNotification(d.title||'SiivousNinjat Oy',{body:d.body||'',icon:'icon-192.png',badge:'icon-192.png',data:{tab:d.tab||''}}))});
 self.addEventListener('notificationclick',e=>{e.notification.close();
  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(l=>l.length?l[0].focus():clients.openWindow('./')))});
